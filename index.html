@@ -1540,8 +1540,32 @@
   });
   var SEED_STAND = "14.11.2026";
   var DATA_KEY = "bossel-daten-v1";
+  function cleanTitle(t) {
+    return String(t || "").replace(/\s*\(Neu\d+\)/gi, "").replace(/\(\((4er)\)\)/gi, "($1)")
+      .replace(/\(\s+/g, "(").replace(/\s+\)/g, ")").replace(/\s+/g, " ").trim();
+  }
+  var CLASS_RX = { M: /\s*Männer\s+(?:I{1,3}|IV|V)\b/i, F: /\s*Frauen\s+(?:I{1,3}|IV)\b/i, JM: /\s*männl(?:iche|\.)\s+Jugend\s+[A-F]\b/i, JW: /\s*weibl(?:iche|\.)\s+Jugend\s+[A-F]\b/i };
+  function leagueShort(pl) {
+    var t = cleanTitle(pl.title);
+    var vier = /\(\s*4er\s*\)/i.test(t) || !!pl.vier;
+    t = t.replace(/\s*\(\s*4er\s*\)/gi, "");
+    if (CLASS_RX[pl.group]) t = t.replace(CLASS_RX[pl.group], "");
+    t = t.replace(/\s+-\s+/g, " · ").replace(/\s+/g, " ").replace(/^\s*·\s*|\s*·\s*$/g, "").trim();
+    return (t || "Liga") + (vier ? " · 4er" : "");
+  }
+  var GROUP_HEAD = { M: "Männer", F: "Frauen", JM: "Männliche Jugend", JW: "Weibliche Jugend" };
+  function classShort(g, k) { return (g === "JM" || g === "JW" ? "Jugend " : GROUP_HEAD[g] + " ") + k; }
+  function nameTells(name) { return !(app.club && name === app.club.name + " I"); }
+  function teamLine(meta, withClass) {
+    var pl = meta.plan ? planById(meta.plan) : null;
+    var parts = [];
+    if (withClass) parts.push(classShort(meta.group, meta.klasse));
+    if (pl && pl.id === meta.plan) parts.push(leagueShort(pl));
+    if (nameTells(meta.name)) parts.push(meta.name);
+    return parts.join(" · ");
+  }
   function planFromData(p, stand) {
-    return { id: p.id, label: p.title, title: p.title, sub: p.sub, stand: stand, group: p.group, klasse: p.klasse,
+    return { id: p.id, label: cleanTitle(p.title), title: cleanTitle(p.title), sub: p.sub, stand: stand, group: p.group, klasse: p.klasse,
       vier: !!p.vier, org: p.org || "", days: Array.isArray(p.days) ? p.days : [] };
   }
   function applyData(data) {
@@ -1673,7 +1697,7 @@
         if (q === 0) tm.appendChild(document.createTextNode(" – "));
       });
       nx.appendChild(tm);
-      nx.appendChild(mk("div", "hnsub", t.name + " · " + pl.title));
+      nx.appendChild(mk("div", "hnsub", classShort(pl.group, pl.klasse) + " · " + leagueShort(pl)));
       if (info.next.isCur) nx.appendChild(goBtn(pl, info.next.day, g[0], g[1]));
       else nx.appendChild(mk("div", "hnsub", "Tracken ist ab dem Spieltag möglich."));
     } else {
@@ -1900,12 +1924,18 @@
     var opts = clubTeams();
     var sel = el("ownSel");
     sel.textContent = "";
+    var ogs = {};
+    var ogFor = function (label) {
+      if (!ogs[label]) { ogs[label] = mk("optgroup"); ogs[label].label = label; }
+      return ogs[label];
+    };
     opts.forEach(function (t, i) {
-      var tp = t.plan ? planById(t.plan) : null;
-      var o = mk("option", null, (isFav(tkey(t.name, t.group, t.klasse)) ? "★ " : "") + t.name + " · " + (tp && tp.id === t.plan ? tp.title : classLabel(t.group, t.klasse)));
+      var fav = isFav(tkey(t.name, t.group, t.klasse));
+      var o = mk("option", null, (fav ? "★ " : "") + teamLine(t, true));
       o.value = String(i);
-      sel.appendChild(o);
+      ogFor(fav ? "Favoriten" : (GROUP_HEAD[t.group] || "Weitere")).appendChild(o);
     });
+    ["Favoriten"].concat(GORDER.map(function (g) { return GROUP_HEAD[g]; }), ["Weitere"]).forEach(function (l) { if (ogs[l]) sel.appendChild(ogs[l]); });
     var on = mk("option", null, "Andere Mannschaft …");
     on.value = "new";
     sel.appendChild(on);
@@ -3647,31 +3677,43 @@
     listEl.textContent = "";
     if (names.indexOf(squadTeam) < 0) { squadTeam = names[0] || ""; squadEdit = -1; }
     var favCount = (app.favs || []).length;
-    names.forEach(function (n, idx) {
-      if (idx === 0 && favCount) listEl.appendChild(mk("div", "tsection", "Favoriten (" + favCount + " von " + MAX_FAVS + ")"));
-      if (idx === favCount && idx < names.length) listEl.appendChild(mk("div", "tsection", app.club ? "Mannschaften von " + app.club.name : "Weitere Mannschaften"));
-      var meta = teams[idx];
+    var KORDER = { I: 1, II: 2, III: 3, IV: 4, V: 5, A: 1, B: 2, C: 3, D: 4, E: 5, F: 6 };
+    var renderRow = function (n, meta) {
       var pl = meta.plan ? planById(meta.plan) : null;
       var row = mk("div", "trow" + (n === squadTeam ? " sel" : ""));
       var fav = isFav(n);
-      var dn = meta.name;
-      var lgName = pl ? pl.title : classLabel(meta.group, meta.klasse);
-      var st = btn("star" + (fav ? " on" : ""), fav ? "★" : "☆", fav ? dn + " (" + lgName + ") als Favorit entfernen" : dn + " (" + lgName + ") als Favorit merken", function () {
+      var title = classShort(meta.group, meta.klasse);
+      var sub = [];
+      if (pl && pl.id === meta.plan) sub.push(leagueShort(pl));
+      if (nameTells(meta.name)) sub.push(meta.name);
+      var spoken = title + (sub.length ? ", " + sub.join(", ") : "");
+      var st = btn("star" + (fav ? " on" : ""), fav ? "★" : "☆", fav ? spoken + " als Favorit entfernen" : spoken + " als Favorit merken", function () {
         var msg = toggleFav(n);
-        favMsg(msg);
         renderSquad();
-        if (msg) favMsg(msg);
+        favMsg(msg);
       });
       st.setAttribute("aria-pressed", fav ? "true" : "false");
       row.appendChild(st);
       var main = mk("button", "tmain");
       main.type = "button";
-      main.setAttribute("aria-label", dn + " (" + lgName + ") auswählen");
-      main.appendChild(mk("span", "tname", dn));
-      main.appendChild(mk("span", "tsub", pl ? pl.title : classLabel(meta.group, meta.klasse)));
+      main.setAttribute("aria-label", spoken + " auswählen");
+      main.appendChild(mk("span", "tname", title));
+      if (sub.length) main.appendChild(mk("span", "tsub", sub.join(" · ")));
       main.addEventListener("click", function () { squadTeam = n; squadEdit = -1; sqNewOpen = false; favMsg(""); renderSquad(); });
       row.appendChild(main);
       listEl.appendChild(row);
+    };
+    if (favCount) {
+      listEl.appendChild(mk("div", "tsection", "Favoriten (" + favCount + " von " + MAX_FAVS + ")"));
+      names.forEach(function (n, idx) { if (isFav(n)) renderRow(n, teams[idx]); });
+    }
+    GORDER.forEach(function (g) {
+      var items = [];
+      names.forEach(function (n, idx) { if (!isFav(n) && teams[idx].group === g) items.push({ n: n, m: teams[idx] }); });
+      if (!items.length) return;
+      items.sort(function (x, y) { return (KORDER[x.m.klasse] || 9) - (KORDER[y.m.klasse] || 9) || x.n.localeCompare(y.n, "de"); });
+      listEl.appendChild(mk("div", "tsection", GROUP_HEAD[g]));
+      items.forEach(function (it) { renderRow(it.n, it.m); });
     });
     if (!names.length) listEl.appendChild(mk("p", "emptynote", app.club ? "Für deinen Verein wurde keine Mannschaft gefunden." : "Wähle oben rechts deinen Verein, dann erscheinen hier seine Mannschaften. Mit dem Stern merkst du dir bis zu drei Favoriten."));
     if (app.club) {
@@ -3692,8 +3734,9 @@
     var list = app.squads[squadTeam] || (app.squads[squadTeam] = []);
     var both = team ? !holzOnlyClass(team.group, team.klasse) : true;
     el("squadKHint").hidden = !both;
-    el("squadTitle").textContent = tparse(squadTeam).name;
-    el("squadSub").textContent = (team ? classLabel(team.group, team.klasse) + " · " : "") + list.length + (list.length === 1 ? " Spieler" : " Spieler");
+    el("squadTitle").textContent = team ? classShort(team.group, team.klasse) : tparse(squadTeam).name;
+    var tl = team ? teamLine(team, false) : "";
+    el("squadSub").textContent = (tl ? tl + " · " : "") + list.length + " Spieler";
     var ol = el("squadList");
     ol.textContent = "";
     list.forEach(function (n, i) {
