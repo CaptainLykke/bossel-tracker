@@ -1,2 +1,64 @@
-# bossel-tracker
-Boßel-Tracker: kostenlose Web-App fürs Friesische Straßenboßeln. Würfe, Schoet und Meter zählen, Tabellen, Ergebnisse und Spielpläne (Kreis VIII Esens). Ergebnisse werden automatisch von bosselergebnis.info aktualisiert. Direkt im Browser nutzen: https://captainlykke.github.io/bossel-tracker/
+# Boßel-Tracker mit automatischen Ergebnissen
+
+Die App (`index.html`) läuft über GitHub Pages unter einer eigenen Adresse.
+Ein Zeitplan holt sonntagabends und montags die Ergebnisse von bosselergebnis.info
+und legt sie als `ergebnisse.json` neben die App. Die App lädt diese Datei beim Öffnen.
+
+## Inhalt
+
+| Datei | Zweck |
+|---|---|
+| `index.html` | die App |
+| `ergebnisse.json` | aktuelle Ergebnisse, wird automatisch erneuert |
+| `scripts/update_results.py` | holt die Ergebnisse und schreibt `ergebnisse.json` |
+| `.github/workflows/update-results.yml` | Zeitplan und Veröffentlichung |
+
+## Einrichten (einmalig, etwa 30 Minuten)
+
+### Phase 1: privat testen
+
+1. Auf github.com oben rechts **+ › New repository**: Name `bossel-tracker`, **Private**, README aus, kein .gitignore, keine Lizenz, **Create repository**.
+2. **uploading an existing file** wählen und `index.html`, `ergebnisse.json` und `README.md` hochladen, **Commit changes**.
+3. Das Skript anlegen: **Add file › Create new file**, als Namen `scripts/update_results.py` eintippen
+   (der Schrägstrich legt den Ordner an), den Inhalt hineinkopieren, **Commit changes**.
+4. Den Zeitplan genauso anlegen: **Add file › Create new file**, Name `.github/workflows/update-results.yml`,
+   Inhalt hineinkopieren, **Commit changes**.
+   (Der Ordner `.github` ist auf vielen Rechnern unsichtbar und wird beim Hochladen gern vergessen, deshalb dieser Weg.)
+5. **Settings › Actions › General**: ganz unten bei **Workflow permissions** „**Read and write permissions**“ wählen, **Save**.
+6. **Actions** öffnen, links **Ergebnisse aktualisieren**, rechts **Run workflow**.
+   Der Teil „ergebnisse“ wird grün, „seite“ wird übersprungen, solange das Repository privat ist.
+   Gab es neue Ergebnisse, erscheint im Code ein Eintrag „Ergebnisse aktualisiert“ an `ergebnisse.json`.
+
+Hinweis: Eine Webseite (GitHub Pages) gibt es im kostenlosen Tarif nur für öffentliche Repositories.
+In Phase 1 testest du deshalb den automatischen Abruf, die App selbst kannst du weiter über den Claude-Link nutzen.
+
+### Phase 2: veröffentlichen und teilen
+
+1. **Settings › General**, ganz unten **Change repository visibility › Change to public**.
+2. **Settings › Pages**: bei **Source** „**GitHub Actions**“ auswählen.
+3. **Actions › Ergebnisse aktualisieren › Run workflow**. Jetzt laufen beide Teile, „seite“ zeigt am Ende den Link.
+4. Die App ist unter `https://DEIN-NAME.github.io/bossel-tracker/` erreichbar. Diesen Link kannst du weitergeben.
+
+## Im Alltag
+
+- Ergebnisse werden **sonntags um 20 Uhr** (Sommerzeit 21 Uhr) und **montags nachmittags** geholt.
+  Die Zeiten stehen in `update-results.yml` in den `cron`-Zeilen (in UTC).
+- Sofort aktualisieren: **Actions › Ergebnisse aktualisieren › Run workflow**.
+- Die App zeigt auf der Startseite „Stand“ mit dem Datum des letzten Abrufs.
+- Ohne Internet oder ohne `ergebnisse.json` nutzt die App die eingebauten Ergebnisse.
+
+## Neue App-Version einspielen
+
+`index.html` im Repository öffnen, **Stift-Symbol › …** bzw. einfach die neue Datei per
+**Add file › Upload files** mit gleichem Namen hochladen. Die Seite wird danach automatisch neu veröffentlicht.
+
+## Neue Saison oder weitere Klassen
+
+In `scripts/update_results.py` oben in `PLANS` die Spielplan-ID von bosselergebnis.info,
+Klasse, Schoet-Länge und Anzahl der Spieltage eintragen. Die Spielpläne selbst stecken in der App
+und müssen dort ebenfalls ergänzt werden.
+
+## Hinweis
+
+Bitte frag beim Betreiber von bosselergebnis.info kurz nach, ob der automatische Abruf in Ordnung ist.
+Das Skript ruft pro Lauf jeden Spieltag einmal ab, mit einer kleinen Pause dazwischen.

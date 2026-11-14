@@ -1,0 +1,75 @@
+name: Ergebnisse aktualisieren
+
+on:
+  schedule:
+    - cron: "0 19 * * 0"   # sonntags 19:00 UTC (20 Uhr Winterzeit, 21 Uhr Sommerzeit)
+    - cron: "0 16 * * 1"   # montags 16:00 UTC, für spät eingetragene Ergebnisse
+  workflow_dispatch:        # von Hand starten: Actions › Ergebnisse aktualisieren › Run workflow
+  push:
+    branches: [main]        # nach jeder Änderung neu veröffentlichen
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # 1) Ergebnisse holen und im Repository speichern (läuft auch, solange das Repository privat ist)
+  ergebnisse:
+    runs-on: ubuntu-latest
+    outputs:
+      privat: ${{ steps.sichtbarkeit.outputs.privat }}
+    steps:
+      - name: Dateien holen
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ergebnisse von bosselergebnis.info abrufen
+        run: python scripts/update_results.py
+
+      - name: Neue Ergebnisse speichern
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ergebnisse.json
+          git diff --cached --quiet || (git commit -m "Ergebnisse aktualisiert" && git push)
+
+      - name: Ist das Repository privat?
+        id: sichtbarkeit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "privat=$(gh api repos/$GITHUB_REPOSITORY --jq .private)" >> "$GITHUB_OUTPUT"
+
+  # 2) Webseite veröffentlichen (erst, wenn das Repository öffentlich ist)
+  seite:
+    needs: ergebnisse
+    if: needs.ergebnisse.outputs.privat == 'false'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Aktuellen Stand holen
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: GitHub Pages vorbereiten
+        uses: actions/configure-pages@v5
+
+      - name: Seite hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Seite veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4

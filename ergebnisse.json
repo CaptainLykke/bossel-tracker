@@ -1,0 +1,1501 @@
+{
+ "version": "4a88d2f1aab8",
+ "stand": "14.11.2026",
+ "abgerufen": "2026-11-14T13:04+01:00",
+ "records": [
+  {
+   "id": "imp-86423",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-03",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Holtgast I",
+    "R": "Utarp-Schweindorf II (Weibl. F)"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 6,
+     "m": 34
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 6,
+     "m": 34
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86424",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-03",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "SG Ochtersum/Utgast I",
+    "R": "SG Stedesd./Mamburg I (Weibl. F)"
+   },
+   "res": {
+    "L": {
+     "s": 3,
+     "m": 28
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 3,
+     "m": 28
+    }
+   ],
+   "note": "Verl. 17 10."
+  },
+  {
+   "id": "imp-86425",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-03",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Westeraccum I",
+    "R": "Willmsfeld I"
+   },
+   "res": {
+    "L": {
+     "s": 1,
+     "m": 0
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 1,
+     "m": 0
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86426",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-10",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Blomberg II",
+    "R": "Willmsfeld I"
+   },
+   "res": {
+    "L": {
+     "s": 6,
+     "m": 28
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 6,
+     "m": 28
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86427",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-10",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "SG Stedesd./Mamburg I (Weibl. F)",
+    "R": "Westeraccum I"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 13,
+     "m": 47
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 13,
+     "m": 47
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86428",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-10",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Utarp-Schweindorf II (Weibl. F)",
+    "R": "SG Ochtersum/Utgast I"
+   },
+   "res": {
+    "L": {
+     "s": 12,
+     "m": 40
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 12,
+     "m": 40
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86430",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-24",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Holtgast I",
+    "R": "Blomberg II"
+   },
+   "res": {
+    "L": {
+     "s": 5,
+     "m": 13
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 5,
+     "m": 13
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86432",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-24",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Westeraccum I",
+    "R": "Utarp-Schweindorf II (Weibl. F)"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 10,
+     "m": 13
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 10,
+     "m": 13
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86433",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-24",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Willmsfeld I",
+    "R": "SG Stedesd./Mamburg I (Weibl. F)"
+   },
+   "res": {
+    "L": {
+     "s": 2,
+     "m": 20
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 2,
+     "m": 20
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86434",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-10-31",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Blomberg II",
+    "R": "SG Stedesd./Mamburg I (Weibl. F)"
+   },
+   "res": {
+    "L": {
+     "s": 6,
+     "m": 43
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 6,
+     "m": 43
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86435",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-10-31",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Utarp-Schweindorf II (Weibl. F)",
+    "R": "Willmsfeld I"
+   },
+   "res": {
+    "L": {
+     "s": 11,
+     "m": 11
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 11,
+     "m": 11
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86437",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-10-31",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Holtgast I",
+    "R": "SG Ochtersum/Utgast I"
+   },
+   "res": {
+    "L": {
+     "s": 14,
+     "m": 2
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 14,
+     "m": 2
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86438",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-07",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "SG Ochtersum/Utgast I",
+    "R": "Blomberg II"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 2,
+     "m": 20
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 2,
+     "m": 20
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86439",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-07",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Westeraccum I",
+    "R": "Holtgast I"
+   },
+   "res": {
+    "L": {
+     "s": 8,
+     "m": 3
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 8,
+     "m": 3
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86441",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-07",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "SG Stedesd./Mamburg I (Weibl. F)",
+    "R": "Utarp-Schweindorf II (Weibl. F)"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 10,
+     "m": 9
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 10,
+     "m": 9
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86442",
+   "imp": 1,
+   "st": 6,
+   "date": "2026-11-14",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "Blomberg II",
+    "R": "Utarp-Schweindorf II (Weibl. F)"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 5,
+     "m": 47
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 5,
+     "m": 47
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-86445",
+   "imp": 1,
+   "st": 6,
+   "date": "2026-11-14",
+   "group": "JM",
+   "klasse": "F",
+   "len": 50,
+   "teams": {
+    "L": "SG Ochtersum/Utgast I",
+    "R": "Westeraccum I"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 11,
+     "m": 44
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 11,
+     "m": 44
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82254",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-04",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Ochtersum I",
+    "R": "Edenserloog-Werdum I"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 6,
+     "m": 245
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 5,
+     "m": 96
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 1,
+     "m": 149
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82255",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-04",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Esens-Moorweg I",
+    "R": "Negenmeerten I"
+   },
+   "res": {
+    "L": {
+     "s": 2,
+     "m": 23
+    },
+    "R": {
+     "s": 3,
+     "m": 86
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 2,
+     "m": 23
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 3,
+     "m": 86
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82256",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-04",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Neugaude I",
+    "R": "Utgast I"
+   },
+   "res": {
+    "L": {
+     "s": 5,
+     "m": 143
+    },
+    "R": {
+     "s": 2,
+     "m": 46
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 2,
+     "m": 46
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 5,
+     "m": 143
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82257",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-04",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Utarp-Schweindorf II",
+    "R": "Ostbense I"
+   },
+   "res": {
+    "L": {
+     "s": 2,
+     "m": 43
+    },
+    "R": {
+     "s": 1,
+     "m": 67
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 1,
+     "m": 67
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 2,
+     "m": 43
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82258",
+   "imp": 1,
+   "st": 1,
+   "date": "2026-10-04",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "SG Neuharlingersiel/Thunum I",
+    "R": "Altharlingersiel I"
+   },
+   "res": {
+    "L": {
+     "s": 10,
+     "m": 0
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 5,
+     "m": 0
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 5,
+     "m": 0
+    }
+   ],
+   "note": "Altharlingersiel nicht angetreten"
+  },
+  {
+   "id": "imp-82259",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-11",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Edenserloog-Werdum I",
+    "R": "Altharlingersiel I"
+   },
+   "res": {
+    "L": {
+     "s": 3,
+     "m": 85
+    },
+    "R": {
+     "s": 3,
+     "m": 130
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 3,
+     "m": 130
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 3,
+     "m": 85
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82260",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-11",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Ostbense I",
+    "R": "SG Neuharlingersiel/Thunum I"
+   },
+   "res": {
+    "L": {
+     "s": 8,
+     "m": 147
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 4,
+     "m": 101
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 4,
+     "m": 46
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82261",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-11",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Utgast I",
+    "R": "Utarp-Schweindorf II"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 8,
+     "m": 68
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 3,
+     "m": 52
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 5,
+     "m": 16
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82262",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-11",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Negenmeerten I",
+    "R": "Neugaude I"
+   },
+   "res": {
+    "L": {
+     "s": 11,
+     "m": 232
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 3,
+     "m": 145
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 8,
+     "m": 87
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82263",
+   "imp": 1,
+   "st": 2,
+   "date": "2026-10-11",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Ochtersum I",
+    "R": "Esens-Moorweg I"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 10,
+     "m": 262
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 5,
+     "m": 142
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 5,
+     "m": 120
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82264",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-25",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Esens-Moorweg I",
+    "R": "Edenserloog-Werdum I"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 4,
+     "m": 34
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 2,
+     "m": 0
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 2,
+     "m": 34
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82265",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-25",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Neugaude I",
+    "R": "Ochtersum I"
+   },
+   "res": {
+    "L": {
+     "s": 2,
+     "m": 146
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 0,
+     "m": 143
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 2,
+     "m": 3
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82266",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-25",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Utarp-Schweindorf II",
+    "R": "Negenmeerten I"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 12,
+     "m": 107
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 6,
+     "m": 71
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 6,
+     "m": 36
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82267",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-25",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "SG Neuharlingersiel/Thunum I",
+    "R": "Utgast I"
+   },
+   "res": {
+    "L": {
+     "s": 8,
+     "m": 167
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 4,
+     "m": 135
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 4,
+     "m": 32
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82268",
+   "imp": 1,
+   "st": 3,
+   "date": "2026-10-25",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Altharlingersiel I",
+    "R": "Ostbense I"
+   },
+   "res": {
+    "L": {
+     "s": 5,
+     "m": 175
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 3,
+     "m": 107
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 2,
+     "m": 68
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82269",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-11-01",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Edenserloog-Werdum I",
+    "R": "Ostbense I"
+   },
+   "res": {
+    "L": {
+     "s": 3,
+     "m": 35
+    },
+    "R": {
+     "s": 4,
+     "m": 28
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 3,
+     "m": 35
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 4,
+     "m": 28
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82270",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-11-01",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Utgast I",
+    "R": "Altharlingersiel I"
+   },
+   "res": {
+    "L": {
+     "s": 7,
+     "m": 270
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 7,
+     "m": 133
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 0,
+     "m": 137
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82271",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-11-01",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Negenmeerten I",
+    "R": "SG Neuharlingersiel/Thunum I"
+   },
+   "res": {
+    "L": {
+     "s": 13,
+     "m": 123
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 2,
+     "m": 6
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 11,
+     "m": 117
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82272",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-11-01",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Ochtersum I",
+    "R": "Utarp-Schweindorf II"
+   },
+   "res": {
+    "L": {
+     "s": 1,
+     "m": 46
+    },
+    "R": {
+     "s": 1,
+     "m": 72
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 1,
+     "m": 72
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 1,
+     "m": 46
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82273",
+   "imp": 1,
+   "st": 4,
+   "date": "2026-11-01",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Esens-Moorweg I",
+    "R": "Neugaude I"
+   },
+   "res": {
+    "L": {
+     "s": 6,
+     "m": 71
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 1,
+     "m": 63
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 5,
+     "m": 8
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82274",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-08",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Neugaude I",
+    "R": "Edenserloog-Werdum I"
+   },
+   "res": {
+    "L": {
+     "s": 0,
+     "m": 0
+    },
+    "R": {
+     "s": 6,
+     "m": 132
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 5,
+     "m": 80
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 1,
+     "m": 52
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82275",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-08",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Utarp-Schweindorf II",
+    "R": "Esens-Moorweg I"
+   },
+   "res": {
+    "L": {
+     "s": 7,
+     "m": 28
+    },
+    "R": {
+     "s": 4,
+     "m": 72
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 7,
+     "m": 28
+    },
+    {
+     "k": "G",
+     "w": "R",
+     "s": 4,
+     "m": 72
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82276",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-08",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "SG Neuharlingersiel/Thunum I",
+    "R": "Ochtersum I"
+   },
+   "res": {
+    "L": {
+     "s": 8,
+     "m": 89
+    },
+    "R": {
+     "s": 4,
+     "m": 1
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 4,
+     "m": 1
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 8,
+     "m": 89
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82277",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-08",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Altharlingersiel I",
+    "R": "Negenmeerten I"
+   },
+   "res": {
+    "L": {
+     "s": 2,
+     "m": 123
+    },
+    "R": {
+     "s": 0,
+     "m": 30
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "R",
+     "s": 0,
+     "m": 30
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 2,
+     "m": 123
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "imp-82278",
+   "imp": 1,
+   "st": 5,
+   "date": "2026-11-08",
+   "group": "M",
+   "klasse": "I",
+   "len": 150,
+   "teams": {
+    "L": "Ostbense I",
+    "R": "Utgast I"
+   },
+   "res": {
+    "L": {
+     "s": 12,
+     "m": 183
+    },
+    "R": {
+     "s": 0,
+     "m": 0
+    }
+   },
+   "rows": [
+    {
+     "k": "H",
+     "w": "L",
+     "s": 1,
+     "m": 79
+    },
+    {
+     "k": "G",
+     "w": "L",
+     "s": 11,
+     "m": 104
+    }
+   ],
+   "note": ""
+  }
+ ]
+}
