@@ -359,6 +359,47 @@
   .teambtn .selmark { margin-left: auto; font-weight: 900; color: var(--accent); flex: none; font-size: 1.3rem; padding-left: 8px; }
   .hvbadge { align-self: flex-start; font-size: .75rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
   .teamdonebar { margin-top: 0; }
+  .tipcard { background: #FFF6E3; border: 1.5px solid #E8C98A; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .tipcard[hidden] { display: none; }
+  .tipcard .tiphead { font-size: .78rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: #8A5A00; }
+  .tipcard p { margin: 0; line-height: 1.45; }
+  .tipcard ul { margin: 0; padding-left: 1.1em; line-height: 1.45; }
+  .tipbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tipbtns .big, .tipbtns .ghost { font-size: 1rem; padding: 8px 16px; min-height: 42px; width: auto; margin: 0; }
+  .tipopts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .tipopt { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .slimbig { padding: 8px 16px; font-size: 1rem; min-height: 40px; width: auto; }
+  .tipopt input { width: 22px; height: 22px; accent-color: var(--accent); }
+  .calhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .calhead h2 { margin: 0; font-size: 1.35rem; text-align: center; flex: 1; }
+  .calnav { width: 48px; min-height: 44px; font-size: 1.5rem; line-height: 1; padding: 0; }
+  .caltoday { display: flex; justify-content: center; margin-top: -4px; }
+  .calgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .calwd { text-align: center; font-size: .75rem; font-weight: 900; color: var(--muted); text-transform: uppercase; padding: 2px 0; }
+  .calday { min-height: 54px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; padding: 4px 2px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+  .calday.out { opacity: .45; }
+  .calday.today { border-color: var(--accent); }
+  .calday.today .cdn { color: var(--accent); }
+  .calday.sel { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .calday.sel .cdn { color: var(--accent-ink); }
+  .calday .cdn { font-weight: 800; font-size: .95rem; }
+  .calday .cdots { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+  .calday .cdot2 { width: 8px; height: 8px; border-radius: 50%; }
+  .calday.sel .cdot2 { box-shadow: 0 0 0 1.5px #fff; }
+  .calday:focus-visible { outline: 3px solid var(--text); outline-offset: 1px; }
+  .callegend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: .88rem; }
+  .callegend span.lg { display: inline-flex; align-items: center; gap: 6px; }
+  .callegend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .callist { display: flex; flex-direction: column; gap: 8px; }
+  .caldate { font-size: .8rem; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+  .calgame { display: flex; gap: 10px; align-items: flex-start; background: var(--surface); border: 1.5px solid var(--line); border-left-width: 6px; border-radius: 12px; padding: 10px 12px; }
+  .calgame .cgmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .calgame .cgtop { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: .92rem; }
+  .calgame .cgteams { font-size: 1rem; overflow-wrap: anywhere; }
+  .calgame .cgteams b { color: var(--accent); }
+  .calgame .cgres { font-size: .9rem; font-weight: 800; }
+  .calgame .cgres.win { color: #2E7D32; } .calgame .cgres.loss { color: #B3261E; } .calgame .cgres.open { color: var(--muted); font-weight: 600; }
+  .calgame .pgo { margin-top: 4px; align-self: flex-start; }
   .chipplus { min-width: 52px; font-size: 1.6rem; line-height: 1; padding-top: 4px; padding-bottom: 6px; }
   .kpair { display: inline-flex; gap: 6px; flex: none; }
   .kball { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; opacity: .3; flex: none; }
@@ -706,6 +747,7 @@
 <div class="view" id="view-menu">
   <div class="menuwrap">
     <div class="menutop"><button class="helpbtn" id="helpBtn" type="button" aria-label="So geht's anzeigen" aria-expanded="false" hidden>?</button><button class="clubchip" id="clubChip" type="button" aria-label="Verein wählen"></button></div>
+    <div class="tipcard" id="tip-menu" hidden></div>
     <div class="homehead">
     <div class="hero">
       <svg viewBox="0 0 340 190" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Boßelwerfer mit Kugel vor Deich und Windmühle">
@@ -754,6 +796,10 @@
         </li>
       </ol>
       <button class="ghost howrules" id="howRules" type="button">Regeln ansehen</button>
+      <div class="tipopts">
+        <label class="tipopt"><input type="checkbox" id="tipsOn"> Tipps auf jeder Seite anzeigen</label>
+        <button class="ghost slim" id="tipsReset" type="button">Alle Tipps wieder anzeigen</button>
+      </div>
     </section>
     </div>
   </div>
@@ -762,8 +808,9 @@
 <!-- ============ Eigener Verein ============ -->
 <div class="view" id="view-team" hidden>
   <div class="subwrap">
-    <div class="topbar"><button class="back" id="teamBack" type="button" hidden>← Start</button><h2>Dein Verein</h2></div>
-    <p class="emptynote">Wähle deinen Verein. Danach zeigt die App nur noch die Spielpläne, Spiele und Ergebnisse deines Vereins, und der Tracker zählt für deine Mannschaft. Du kannst den Verein später oben rechts auf der Startseite ändern.</p>
+    <div class="topbar"><button class="back" id="teamBack" type="button" hidden>← Start</button><h2>Deine Vereine</h2></div>
+    <div class="tipcard" id="tip-team" hidden></div>
+    <p class="emptynote">Wähle deinen Verein, gern auch mehrere: bis zu drei, z. B. den, in dem du wirfst, und den, in dem du trainierst. Danach zeigt die App die Spiele, Ergebnisse und Mannschaften dieser Vereine. Ändern kannst du das jederzeit oben rechts auf der Startseite.</p>
     <label class="field clubsearch"><span class="sr">Verein suchen</span><input id="clubSearch" type="search" placeholder="Verein suchen, z. B. Utgast" autocomplete="off" enterkeyhint="search"></label>
     <div id="teamList" class="gfield"></div>
     <div class="card" id="teamOther">
@@ -785,6 +832,7 @@
 <div class="view" id="view-squad" hidden>
   <div class="subwrap">
     <div class="topbar"><button class="back" id="squadBack" type="button">← Start</button><h2>Mannschaften</h2></div>
+    <div class="tipcard" id="tip-squad" hidden></div>
     <p class="emptynote">Lege für jede Mannschaft den Kader an. Beim Tracker wählst du dann nur noch aus, wer heute wirft und wer Ersatz ist.</p>
     <div class="tlist" id="squadTeams"></div>
     <div class="rmsg" id="favMsg" role="status" hidden></div>
@@ -823,6 +871,7 @@
 <div class="view" id="view-setup" hidden>
   <div class="subwrap setupwrap">
     <div class="topbar"><button class="back" id="setupToMenu" type="button">← Start</button><h2>Tracker</h2></div>
+    <div class="tipcard" id="tip-setup" hidden></div>
     <div class="schoetinfo" id="planInfo" hidden></div>
     <label class="field"><span class="sr">Unsere Mannschaft</span><select id="ownSel"></select></label>
     <div id="ownCustom" class="gfield" hidden>
@@ -988,8 +1037,25 @@
 </div>
 
 <!-- ============ Liga: Tabelle, Ergebnisse, Spielplan ============ -->
+<!-- ============ Kalender ============ -->
+<div class="view" id="view-cal" hidden>
+  <div class="subwrap">
+    <div class="tipcard" id="tip-cal" hidden></div>
+    <div class="calhead">
+      <button class="ghost calnav" id="calPrev" type="button" aria-label="Vorheriger Monat">‹</button>
+      <h2 id="calTitle" aria-live="polite"></h2>
+      <button class="ghost calnav" id="calNext" type="button" aria-label="Nächster Monat">›</button>
+    </div>
+    <div class="caltoday"><button class="ghost slim" id="calToday" type="button">Heute</button></div>
+    <div class="calgrid" id="calGrid" role="grid" aria-label="Monatsansicht"></div>
+    <div class="callegend" id="calLegend"></div>
+    <div class="callist" id="calList"></div>
+  </div>
+</div>
+
 <div class="view" id="view-liga" hidden>
   <div class="ligahead">
+    <div class="tipcard" id="tip-liga" hidden></div>
     <div class="ligatop"><button class="back" id="ligaBack" type="button">← Start</button><div class="ligachips" id="ligaMine" role="group" aria-label="Meine Mannschaften"></div></div>
     <div class="ligasel2"><div class="ligaplan" id="ligaClasses"></div>
     <div class="ligateamrow"><label class="field slim"><span class="sr">Mannschaft</span><select id="ligaTeam"></select></label><button class="favbtn" id="ligaFav" type="button" hidden aria-pressed="false">☆</button></div></div>
@@ -1108,6 +1174,7 @@
 <nav class="bottomnav" id="bottomNav" aria-label="Hauptmenü" hidden>
   <button type="button" id="navHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span>Start</span></button>
   <button type="button" id="navTracker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span>Tracker</span></button>
+  <button type="button" id="navCal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Kalender</span></button>
   <button type="button" id="navLiga"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg><span>Liga</span></button>
   <button type="button" id="navTeam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3"/><circle cx="16" cy="10" r="2.5"/><path d="M3 19c1-3 3.5-4.5 6-4.5s5 1.5 6 4.5M14 15.5c2.5 0 4.5 1 5.5 3.5"/></svg><span>Team</span></button>
 </nav>
@@ -1270,6 +1337,7 @@
     kugelOf: {},
     favs: [],
     clubsMore: [],
+    tips: { on: true, seen: {} },
     ligaTab: 0,
     seedV: ""
   };
@@ -1443,6 +1511,10 @@
       app.seedV = typeof raw.seedV === "string" ? raw.seedV : "";
       app.seedStand = typeof raw.seedStand === "string" ? raw.seedStand : "";
       app.favs = Array.isArray(raw.favs) ? raw.favs.filter(function (x) { return typeof x === "string" && x.trim(); }).slice(0, 6) : [];
+      if (raw.tips && typeof raw.tips === "object") {
+        app.tips = { on: raw.tips.on !== false, seen: {} };
+        if (raw.tips.seen && typeof raw.tips.seen === "object") Object.keys(raw.tips.seen).forEach(function (k) { if (raw.tips.seen[k]) app.tips.seen[k] = true; });
+      }
       app.clubsMore = Array.isArray(raw.clubsMore) ? raw.clubsMore.filter(function (x) { return typeof x === "string" && x.trim(); }).map(clubCanon).slice(0, 2) : [];
       app.ligaTab = raw.ligaTab === 1 || raw.ligaTab === 2 ? raw.ligaTab : 0;
       if (raw.squads && typeof raw.squads === "object") {
@@ -1528,7 +1600,7 @@
   function onlyHolz() { return !!match && holzOnlyClass(match.group, match.klasse); }
 
   /* ---------- Ansichten ---------- */
-  var VIEWS = ["menu", "team", "squad", "setup", "match", "liga", "rules"];
+  var VIEWS = ["menu", "team", "squad", "setup", "match", "liga", "rules", "cal"];
   function show(name) {
     VIEWS.forEach(function (v) { el("view-" + v).hidden = v !== name; });
     if (name !== "setup") applyColors(match ? match.colors : app.last.colors);
@@ -1538,11 +1610,13 @@
     if (name === "liga") renderLiga();
     if (name === "team") renderTeamPicker();
     if (name === "squad") renderSquad();
-    var navOn = ["menu", "liga", "squad", "rules"].indexOf(name) >= 0;
+    if (name === "cal") renderCal();
+    renderTip(name);
+    var navOn = ["menu", "liga", "squad", "rules", "cal"].indexOf(name) >= 0;
     el("bottomNav").hidden = !navOn;
     document.body.classList.toggle("hasnav", navOn);
-    var act = { menu: "navHome", liga: "navLiga", squad: "navTeam" }[name] || "";
-    ["navHome", "navTracker", "navLiga", "navTeam"].forEach(function (id) {
+    var act = { menu: "navHome", liga: "navLiga", squad: "navTeam", cal: "navCal" }[name] || "";
+    ["navHome", "navTracker", "navCal", "navLiga", "navTeam"].forEach(function (id) {
       el(id).classList.toggle("active", id === act);
       if (id === act) el(id).setAttribute("aria-current", "page"); else el(id).removeAttribute("aria-current");
     });
@@ -1566,6 +1640,49 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !el("howOverlay").hidden) closeGuide();
   });
+  var TIPS = {
+    menu: { title: "Deine Startseite", items: [
+      "Oben rechts wählst du deinen Verein. Du kannst bis zu drei Vereine wählen, z. B. wenn du in einem wirfst und in einem anderen trainierst.",
+      "Unter <b>Team</b> markierst du mit dem Stern ☆ bis zu sechs eigene Mannschaften, auch aus verschiedenen Vereinen. Sie erscheinen dann hier mit nächstem Spiel, Tabellenplatz und letztem Ergebnis.",
+      "Die Leiste unten führt zu Tracker, Kalender, Liga und Team. Das „?“ oben links zeigt die Anleitung und die Regeln." ] },
+    team: { title: "Vereine wählen", items: [
+      "Tippe einen Verein an, um ihn hinzuzufügen, und noch einmal, um ihn zu entfernen. Bis zu drei Vereine gehen gleichzeitig.",
+      "Der zuerst gewählte ist dein Hauptverein. Mit „Fertig“ unten kommst du zurück.",
+      "Das Suchfeld findet Vereine auch über ihre Mannschaften." ] },
+    squad: { title: "Mannschaften und Kader", items: [
+      "Mit dem Stern ☆ machst du eine Mannschaft zu „Meine Mannschaften“, bis zu sechs, auch aus verschiedenen Vereinen.",
+      "Tippe auf eine Mannschaft, um ihren Kader anzulegen. Beim Tracker tippst du die Werfer dann nur noch an.",
+      "Hast du mehrere Vereine gewählt, öffnest und schließt du ihre Abschnitte mit einem Tipp auf den Vereinsnamen." ] },
+    liga: { title: "Liga", items: [
+      "Oben stehen deine Mannschaften für den schnellen Wechsel.",
+      "Wische zwischen Tabelle, Ergebnissen und Spielplan oder tippe auf die Reiter.",
+      "Über die Auswahl findest du jede Liga im Kreis, mit dem Stern daneben merkst du dir eine Mannschaft." ] },
+    cal: { title: "Kalender", items: [
+      "Hier stehen alle Spiele deiner Mannschaften im Monat, jede Mannschaft hat ihre eigene Farbe.",
+      "Tippe auf einen Tag, um nur seine Spiele zu sehen, mit ‹ und › blätterst du durch die Monate." ] },
+    setup: { title: "Tracker", items: [
+      "Wähle deine Mannschaft, die Mannschaftsstärke und den Gegner. Der Gegner vom aktuellen Spieltag ist schon eingetragen.",
+      "Danach legst du die Werfer fest, bei 8er und 16er Gruppe für Gruppe. Im Spiel zählst du Schoet, Meter und Würfe." ] }
+  };
+  function renderTip(view) {
+    var box = el("tip-" + view);
+    Object.keys(TIPS).forEach(function (k) { var b = el("tip-" + k); if (b && k !== view) b.hidden = true; });
+    if (!box) return;
+    var t = TIPS[view];
+    var showIt = !!t && app.tips.on && !app.tips.seen[view];
+    box.hidden = !showIt;
+    box.textContent = "";
+    if (!showIt) return;
+    box.setAttribute("role", "note");
+    box.appendChild(mk("div", "tiphead", "Tipp · " + t.title));
+    var ul = mk("ul");
+    t.items.forEach(function (tx) { var li = mk("li"); li.innerHTML = tx; ul.appendChild(li); });
+    box.appendChild(ul);
+    var bt = mk("div", "tipbtns");
+    bt.appendChild(btn("big alt slimbig", "Verstanden", "Tipp ausblenden", function () { app.tips.seen[view] = true; persist(); renderTip(view); }));
+    bt.appendChild(btn("ghost slim", "Keine Tipps mehr", "Alle Tipps ausschalten", function () { app.tips.on = false; persist(); renderTip(view); }));
+    box.appendChild(bt);
+  }
   var SEED_STAND = "14.11.2026";
   var DATA_KEY = "bossel-daten-v1";
   function cleanTitle(t) {
@@ -1635,6 +1752,7 @@
     if (!el("view-liga").hidden) renderLiga();
     if (!el("view-team").hidden) renderTeamPicker();
     if (!el("view-squad").hidden) renderSquad();
+    if (!el("view-cal").hidden) renderCal();
   }
   function loadRemoteResults() {
     if (!window.fetch || location.protocol === "file:") return;
@@ -1722,6 +1840,133 @@
     if (o.next && o.next.isCur) c.appendChild(goBtn(pl, o.next.day, o.next.g[0], o.next.g[1]));
     return c;
   }
+  var CAL_COLORS = ["#B04E1A", "#2e7d32", "#1565c0", "#8e24aa", "#c98a12", "#00838f"];
+  var calMonth = null, calSel = "";
+  function calGames() {
+    var out = [];
+    (app.favs || []).forEach(function (key, fi) {
+      var m = teamMeta(key);
+      if (!m || !m.plan) return;
+      var pl = planById(m.plan);
+      if (!pl || pl.id !== m.plan) return;
+      m.club = teamClub(m.name);
+      var td = today(), curIdx = -1;
+      for (var i = 0; i < pl.days.length; i++) { if (pl.days[i].d >= td) { curIdx = i; break; } }
+      pl.days.forEach(function (d, di) {
+        var g = d.g.filter(function (x) { return x[0] === m.name || x[1] === m.name; })[0];
+        if (!g || g[0] === "Spielfrei" || g[1] === "Spielfrei") return;
+        out.push({ date: d.d, day: d, g: g, pl: pl, meta: m, color: CAL_COLORS[fi % CAL_COLORS.length], isCur: di === curIdx });
+      });
+    });
+    out.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    return out;
+  }
+  function isoOf(y, mo, d) { return y + "-" + String(mo + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0"); }
+  function renderCal() {
+    var td = today();
+    if (!calMonth) { var p0 = td.split("-"); calMonth = { y: Number(p0[0]), m: Number(p0[1]) - 1 }; }
+    var y = calMonth.y, mo = calMonth.m;
+    el("calTitle").textContent = new Date(y, mo, 1).toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+    var games = calGames();
+    var byDate = {};
+    games.forEach(function (gm) { (byDate[gm.date] = byDate[gm.date] || []).push(gm); });
+    // Raster
+    var grid = el("calGrid");
+    grid.textContent = "";
+    ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].forEach(function (w) { grid.appendChild(mk("div", "calwd", w)); });
+    var first = new Date(y, mo, 1);
+    var offset = (first.getDay() + 6) % 7;
+    var start = new Date(y, mo, 1 - offset);
+    var daysInMonth = new Date(y, mo + 1, 0).getDate();
+    var cells = Math.ceil((offset + daysInMonth) / 7) * 7;
+    for (var c = 0; c < cells; c++) {
+      var dt = new Date(start.getFullYear(), start.getMonth(), start.getDate() + c);
+      var iso = isoOf(dt.getFullYear(), dt.getMonth(), dt.getDate());
+      var list = byDate[iso] || [];
+      var cell = mk("button", "calday" + (dt.getMonth() !== mo ? " out" : "") + (iso === td ? " today" : "") + (iso === calSel ? " sel" : ""));
+      cell.type = "button";
+      var lbl = dt.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
+      cell.setAttribute("aria-label", lbl + (list.length ? ", " + list.length + (list.length === 1 ? " Spiel" : " Spiele") : ", keine Spiele"));
+      cell.appendChild(mk("span", "cdn", String(dt.getDate())));
+      var dots = mk("span", "cdots");
+      list.forEach(function (gm) { var dd = mk("span", "cdot2"); dd.style.background = gm.color; dots.appendChild(dd); });
+      cell.appendChild(dots);
+      (function (iso2, dt2) {
+        cell.addEventListener("click", function () {
+          if (dt2.getMonth() !== mo) calMonth = { y: dt2.getFullYear(), m: dt2.getMonth() };
+          calSel = calSel === iso2 ? "" : iso2;
+          renderCal();
+        });
+      })(iso, dt);
+      grid.appendChild(cell);
+    }
+    // Legende
+    var leg = el("calLegend");
+    leg.textContent = "";
+    var seenK = {};
+    games.forEach(function (gm) {
+      var k = gm.meta.key || gm.meta.name;
+      if (seenK[k]) return;
+      seenK[k] = 1;
+      var s1 = mk("span", "lg");
+      var i1 = mk("i"); i1.style.background = gm.color; s1.appendChild(i1);
+      s1.appendChild(document.createTextNode(classShort(gm.meta.group, gm.meta.klasse) + (nameTells(gm.meta.name) ? " (" + gm.meta.name + ")" : "")));
+      leg.appendChild(s1);
+    });
+    // Liste
+    var box = el("calList");
+    box.textContent = "";
+    if (!(app.favs || []).length) {
+      box.appendChild(mk("p", "emptynote", "Markiere unter Team bis zu sechs Mannschaften mit dem Stern ☆, dann erscheinen hier ihre Spiele."));
+      return;
+    }
+    var prefix = isoOf(y, mo, 1).slice(0, 7);
+    var shown = calSel ? (byDate[calSel] || []) : games.filter(function (gm) { return gm.date.slice(0, 7) === prefix; });
+    if (calSel) {
+      var hdr = mk("div", "caldate", new Date(calSel + "T12:00:00").toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" }));
+      box.appendChild(hdr);
+      box.appendChild(btn("ghost slim", "Alle Spiele im Monat zeigen", null, function () { calSel = ""; renderCal(); }));
+      if (!shown.length) box.appendChild(mk("p", "emptynote", "An diesem Tag spielt keine deiner Mannschaften."));
+    } else if (!shown.length) {
+      box.appendChild(mk("p", "emptynote", "In diesem Monat spielt keine deiner Mannschaften."));
+    }
+    var lastDate = calSel;
+    shown.forEach(function (gm) {
+      if (gm.date !== lastDate) {
+        lastDate = gm.date;
+        box.appendChild(mk("div", "caldate", weekdayShort(gm.date) + " " + fmtDate(gm.date)));
+      }
+      var row = mk("div", "calgame");
+      row.style.borderLeftColor = gm.color;
+      var main = mk("div", "cgmain");
+      var top = mk("div", "cgtop");
+      top.appendChild(clubBadge(gm.meta.club));
+      top.appendChild(mk("span", null, classShort(gm.pl.group, gm.pl.klasse) + " · " + leagueShort(gm.pl) + " · " + gm.day.n + ". Spieltag"));
+      main.appendChild(top);
+      var tm = mk("div", "cgteams");
+      [0, 1].forEach(function (q) {
+        tm.appendChild(mk(gm.g[q] === gm.meta.name ? "b" : "span", null, gm.g[q]));
+        if (q === 0) tm.appendChild(document.createTextNode(" – "));
+      });
+      main.appendChild(tm);
+      var gi = gameInfo(gm.pl, gm.day, gm.g);
+      if (!gi.open && !gi.free) {
+        var len = schoetLen(gm.pl.group, gm.pl.klasse);
+        var net = gi.net * (gm.g[0] === gm.meta.name ? 1 : -1);
+        var word = gi.draw ? "Unentschieden" : net > 0 ? "Sieg" : "Niederlage";
+        main.appendChild(mk("div", "cgres " + (gi.draw ? "" : net > 0 ? "win" : "loss"), word + " " + fmtErg(net, len)));
+      } else if (gm.isCur) {
+        main.appendChild(goBtn(gm.pl, gm.day, gm.g[0], gm.g[1]));
+      } else {
+        main.appendChild(mk("div", "cgres open", gm.date < td ? "Ergebnis noch nicht eingetragen" : "noch offen"));
+      }
+      row.appendChild(main);
+      box.appendChild(row);
+    });
+  }
+  el("calPrev").addEventListener("click", function () { var d = new Date(calMonth.y, calMonth.m - 1, 1); calMonth = { y: d.getFullYear(), m: d.getMonth() }; calSel = ""; renderCal(); });
+  el("calNext").addEventListener("click", function () { var d = new Date(calMonth.y, calMonth.m + 1, 1); calMonth = { y: d.getFullYear(), m: d.getMonth() }; calSel = ""; renderCal(); });
+  el("calToday").addEventListener("click", function () { calMonth = null; calSel = today(); renderCal(); });
   function renderHome() {
     var box = el("homeNext"), em = el("homeEmpty"), hint = el("homeHint");
     el("homeStats").hidden = true;
@@ -1750,6 +1995,7 @@
   function renderMenu() {
     renderClubChip();
     renderHome();
+    el("tipsOn").checked = !!app.tips.on;
     var has = !!app.club;
     var showGuide = helpOpen;
     el("howOverlay").hidden = !showGuide;
@@ -1928,6 +2174,7 @@
     openSetup();
   });
   el("navHome").addEventListener("click", function () { show("menu"); });
+  el("navCal").addEventListener("click", function () { show("cal"); });
   function renderClubChip() {
     var chip = el("clubChip");
     chip.textContent = "";
@@ -1947,6 +2194,8 @@
   el("howPick").addEventListener("click", function () { show("team"); });
   el("howSkip").addEventListener("click", closeGuide);
   el("howRules").addEventListener("click", function () { helpOpen = false; show("rules"); });
+  el("tipsOn").addEventListener("change", function () { app.tips.on = el("tipsOn").checked; persist(); renderTip("menu"); });
+  el("tipsReset").addEventListener("click", function () { app.tips = { on: true, seen: {} }; el("tipsOn").checked = true; persist(); renderTip("menu"); el("tipsReset").textContent = "Tipps sind wieder an"; });
   ["setupToMenu", "ligaBack", "rulesToMenu", "toMenu", "squadBack"].forEach(function (id) {
     el(id).addEventListener("click", function () { show("menu"); });
   });
