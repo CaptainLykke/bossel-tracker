@@ -29,10 +29,10 @@ jobs:
       geaendert: ${{ steps.speichern.outputs.geaendert }}
     steps:
       - name: Dateien holen
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Python einrichten
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -78,18 +78,18 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Aktuellen Stand holen
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
 
       - name: GitHub Pages vorbereiten
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Seite hochladen
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: "."
 
       - name: Seite veröffentlichen
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
