@@ -1,16 +1,17 @@
 # Boßel-Tracker mit automatischen Ergebnissen
 
 Die App (`index.html`) läuft über GitHub Pages unter einer eigenen Adresse.
-Ein Zeitplan holt sonntagabends und montags die Ergebnisse von bosselergebnis.info
-und legt sie als `ergebnisse.json` neben die App. Die App lädt diese Datei beim Öffnen.
+Ein Zeitplan holt sonntagabends und montags alle Spielpläne aus Kreis VIII Esens samt Ergebnissen
+von bosselergebnis.info und legt sie als `daten.json` neben die App. Die App lädt diese Datei beim Öffnen.
 
 ## Inhalt
 
 | Datei | Zweck |
 |---|---|
 | `index.html` | die App |
-| `ergebnisse.json` | aktuelle Ergebnisse, wird automatisch erneuert |
-| `scripts/update_results.py` | holt die Ergebnisse und schreibt `ergebnisse.json` |
+| `daten.json` | Spielpläne und Ergebnisse, wird automatisch erneuert |
+| `scripts/update_data.py` | holt Spielpläne und Ergebnisse und schreibt `daten.json` |
+| `ergebnisse.json`, `scripts/update_results.py` | ältere Fassung, wird nicht mehr gebraucht und kann gelöscht werden |
 | `.github/workflows/update-results.yml` | Zeitplan und Veröffentlichung |
 
 ## Einrichten (einmalig, etwa 30 Minuten)
@@ -52,13 +53,13 @@ In Phase 1 testest du deshalb den automatischen Abruf, die App selbst kannst du 
 `index.html` im Repository öffnen, **Stift-Symbol › …** bzw. einfach die neue Datei per
 **Add file › Upload files** mit gleichem Namen hochladen. Die Seite wird danach automatisch neu veröffentlicht.
 
-## Neue Saison oder weitere Klassen
+## Neue Saison oder weitere Kreise
 
-In `scripts/update_results.py` oben in `PLANS` die Spielplan-ID von bosselergebnis.info,
-Klasse, Schoet-Länge und Anzahl der Spieltage eintragen. Die Spielpläne selbst stecken in der App
-und müssen dort ebenfalls ergänzt werden.
+In `scripts/update_data.py` oben `SEASON` (z. B. `"2027-2028"`) bzw. `KREISE` anpassen,
+z. B. `["ese", "wtm"]` für Esens und Wittmund. Das Skript findet die Ligen selbst.
+Komplette Spielpläne holt es höchstens einmal pro Woche, sonst nur die letzten Spieltage.
 
 ## Hinweis
 
 Bitte frag beim Betreiber von bosselergebnis.info kurz nach, ob der automatische Abruf in Ordnung ist.
-Das Skript ruft pro Lauf jeden Spieltag einmal ab, mit einer kleinen Pause dazwischen.
+Das Skript holt die kompletten Spielpläne höchstens einmal pro Woche (rund 800 Abrufe), sonst nur die Spieltage der letzten drei Wochen (rund 150 Abrufe), jeweils mit einer kleinen Pause dazwischen.
