@@ -42,11 +42,20 @@ In Phase 1 testest du deshalb den automatischen Abruf, die App selbst kannst du 
 
 ## Im Alltag
 
-- Ergebnisse werden **sonntags um 20 Uhr** (Sommerzeit 21 Uhr) und **montags nachmittags** geholt.
-  Die Zeiten stehen in `update-results.yml` in den `cron`-Zeilen (in UTC).
+Der Zeitplan steht in `.github/workflows/update-results.yml` (Zeiten in UTC, also Winterzeit +1, Sommerzeit +2 Stunden):
+
+| Wann | Was |
+|---|---|
+| Samstag und Sonntag, ca. 11 bis 21 Uhr, alle 30 Minuten | Schnellmodus: nur die Spieltage dieses Wochenendes |
+| Montag früh und Montag nachmittags | Spieltage der letzten drei Wochen, für spät eingetragene Ergebnisse |
+| Mittwoch nachts | alle Spielpläne komplett, falls sich Termine geändert haben |
+
+- Die Seite wird nur neu veröffentlicht, wenn sich wirklich etwas geändert hat.
+- GitHub startet geplante Läufe manchmal mit einigen Minuten Verspätung.
 - Sofort aktualisieren: **Actions › Ergebnisse aktualisieren › Run workflow**.
-- Die App zeigt auf der Startseite „Stand“ mit dem Datum des letzten Abrufs.
-- Ohne Internet oder ohne `ergebnisse.json` nutzt die App die eingebauten Ergebnisse.
+- Die App zeigt auf der Startseite „Stand“ mit Datum und Uhrzeit des letzten Abrufs. Sie lädt neue Daten beim Öffnen,
+  wenn sie wieder in den Vordergrund kommt und alle 10 Minuten, solange sie offen ist.
+- Ohne Internet nutzt die App die zuletzt geladenen Daten.
 
 ## Neue App-Version einspielen
 
