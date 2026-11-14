@@ -1555,7 +1555,10 @@
       data.records.forEach(function (r) { var rec = fixRec(r); if (rec) app.matches.push(rec); });
       app.seedV = v;
     }
-    if (typeof data.stand === "string") app.seedStand = data.stand;
+    if (typeof data.stand === "string") {
+      var tm = typeof data.abgerufen === "string" ? (data.abgerufen.match(/T(\d\d:\d\d)/) || [])[1] : "";
+      app.seedStand = data.stand + (tm ? ", " + tm + " Uhr" : "");
+    }
     return true;
   }
   function loadCachedData() {
@@ -1569,6 +1572,12 @@
   }
   // Auf einer eigenen Adresse (z. B. GitHub Pages) liegt neben der App die Datei ergebnisse.json,
   // die ein Zeitplan regelmäßig neu von bosselergebnis.info holt. Fehlt sie, bleiben die eingebauten Daten.
+  var lastRemote = 0;
+  function maybeRefresh() {
+    if (document.visibilityState === "visible" && Date.now() - lastRemote > 5 * 60 * 1000) loadRemoteResults();
+  }
+  document.addEventListener("visibilitychange", maybeRefresh);
+  setInterval(maybeRefresh, 10 * 60 * 1000);
   function refreshVisible() {
     if (!el("view-menu").hidden) renderMenu();
     if (!el("view-liga").hidden) renderLiga();
@@ -1577,7 +1586,8 @@
   }
   function loadRemoteResults() {
     if (!window.fetch || location.protocol === "file:") return;
-    fetch("daten.json", { cache: "no-store" }).then(function (r) {
+    lastRemote = Date.now();
+    fetch("daten.json", { cache: "no-cache" }).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.text();
     }).then(function (text) {
@@ -1588,7 +1598,7 @@
       refreshVisible();
     }).catch(function () {
       // ältere Ablage: nur Ergebnisse
-      fetch("ergebnisse.json", { cache: "no-store" }).then(function (r) {
+      fetch("ergebnisse.json", { cache: "no-cache" }).then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
       }).then(function (data) {
