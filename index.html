@@ -176,7 +176,7 @@
   .homehint { margin: 0 2px; font-size: .85rem; color: var(--muted); }
   .howrules { align-self: flex-start; margin-top: 12px; }
   .bottomnav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: flex; background: var(--surface); border-top: 1.5px solid var(--line); padding: 4px 6px calc(8px + env(safe-area-inset-bottom, 0px)); }
-  .bottomnav[hidden] { display: none; }
+  .bottomnav[hidden], .bottomnav button[hidden] { display: none; }
   .bottomnav button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0 4px; border: 0; background: transparent; color: var(--muted); font-family: inherit; font-size: .82rem; font-weight: 800; cursor: pointer; position: relative; }
   .bottomnav button svg { width: 24px; height: 24px; }
   .bottomnav button.active { color: var(--accent); }
@@ -400,6 +400,16 @@
   .calgame .cgres { font-size: .9rem; font-weight: 800; }
   .calgame .cgres.win { color: #2E7D32; } .calgame .cgres.loss { color: #B3261E; } .calgame .cgres.open { color: var(--muted); font-weight: 600; }
   .calgame .pgo { margin-top: 4px; align-self: flex-start; }
+  #view-squad.detail .listonly, #view-squad:not(.detail) .detailonly { display: none !important; }
+  .trow .tcount { margin-left: auto; flex: none; display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: .85rem; font-weight: 700; white-space: nowrap; padding-left: 6px; }
+  .trow .tchev { font-size: 1.4rem; line-height: 1; color: var(--muted); }
+  .teamhead { flex-direction: row; align-items: center; gap: 12px; }
+  .teamhead .thmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .teamhead .thtitle { font-size: 1.35rem; font-weight: 900; line-height: 1.15; }
+  .teamhead .thsub { color: var(--muted); font-size: .92rem; overflow-wrap: anywhere; }
+  .teamhead .tlogo, .teamhead .tinit { width: 44px; height: 44px; font-size: .95rem; }
+  .teamhead .star { width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); font-size: 1.6rem; cursor: pointer; flex: none; }
+  .teamhead .star.on { color: #C98A12; }
   .chipplus { min-width: 52px; font-size: 1.6rem; line-height: 1; padding-top: 4px; padding-bottom: 6px; }
   .kpair { display: inline-flex; gap: 6px; flex: none; }
   .kball { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; opacity: .3; flex: none; }
@@ -831,12 +841,14 @@
 <!-- ============ Mannschaften und Spieler ============ -->
 <div class="view" id="view-squad" hidden>
   <div class="subwrap">
-    <div class="topbar"><button class="back" id="squadBack" type="button">← Start</button><h2>Mannschaften</h2></div>
+    <div class="topbar"><button class="back" id="squadBack" type="button">← Start</button><h2 id="squadHead">Mannschaften</h2></div>
     <div class="tipcard" id="tip-squad" hidden></div>
-    <p class="emptynote">Lege für jede Mannschaft den Kader an. Beim Tracker wählst du dann nur noch aus, wer heute wirft und wer Ersatz ist.</p>
-    <div class="tlist" id="squadTeams"></div>
-    <div class="rmsg" id="favMsg" role="status" hidden></div>
-    <div class="card" id="sqNewCard">
+
+    <!-- Liste der Mannschaften -->
+    <p class="emptynote listonly">Tippe auf eine Mannschaft, um ihren Kader zu sehen und zu bearbeiten. Mit dem Stern ☆ kommt sie zu „Meine Mannschaften“.</p>
+    <div class="tlist listonly" id="squadTeams"></div>
+    <div class="rmsg listonly" id="favMsg" role="status" hidden></div>
+    <div class="card listonly" id="sqNewCard">
       <h3>Weitere Mannschaft anlegen</h3>
       <div class="sub">Zum Beispiel eine zweite Mannschaft deines Vereins.</div>
       <label class="field"><span>Gruppe</span><select id="sqGroup"></select></label>
@@ -844,7 +856,17 @@
       <label class="field tn"><span>Name der Mannschaft</span><input id="sqName" type="text" maxlength="30" autocomplete="off"></label>
       <button class="big" id="sqCreate" type="button">Mannschaft anlegen</button>
     </div>
-    <div class="card" id="squadCard">
+    <div class="card listonly" id="importCard">
+      <h3>Kader von jemand anderem übernehmen</h3>
+      <div class="sub">Hat dir jemand einen Kader-Code geschickt? Füge die ganze Nachricht hier ein.</div>
+      <label class="field"><span class="sr">Code</span><textarea class="sharecode" id="importIn" rows="3" placeholder="BOSSEL1:…"></textarea></label>
+      <button class="ghost" id="importBtn" type="button">Kader übernehmen</button>
+      <div class="rmsg" id="importMsg" role="status" hidden></div>
+    </div>
+
+    <!-- Seite einer Mannschaft -->
+    <div class="card detailonly teamhead" id="teamHead"></div>
+    <div class="card detailonly" id="squadCard">
       <h3 id="squadTitle"></h3>
       <div class="sub" id="squadSub"></div>
       <div class="sub kgroups" id="squadKHint" hidden>Tippe bei jedem Spieler auf die schwarze Kugel (Holz) und/oder die rote Kugel (Gummi). Beide Kugeln heißt: kann bei beiden aushelfen.</div>
@@ -855,13 +877,11 @@
       </div>
       <div class="rmsg" id="squadMsg" role="status" hidden></div>
     </div>
-    <div class="card" id="shareCard">
-      <h3>Kader austauschen</h3>
-      <div class="sub">Schicke den Kader als Code an andere, zum Beispiel per WhatsApp. Wer ihn bekommt, fügt den Code unten ein.</div>
+    <div class="card detailonly" id="shareCard">
+      <h3>Kader teilen</h3>
+      <div class="sub">Schicke den Kader als Code an andere, zum Beispiel per WhatsApp. Sie fügen ihn unter Team › „Kader von jemand anderem übernehmen“ ein.</div>
       <button class="big" id="shareBtn" type="button">Kader teilen</button>
       <textarea class="sharecode" id="shareOut" rows="3" readonly hidden aria-label="Code zum Kopieren"></textarea>
-      <label class="field"><span>Code von jemand anderem</span><textarea class="sharecode" id="importIn" rows="3" placeholder="BOSSEL1:…"></textarea></label>
-      <button class="ghost" id="importBtn" type="button">Kader übernehmen</button>
       <div class="rmsg" id="shareMsg" role="status" hidden></div>
     </div>
   </div>
@@ -1610,6 +1630,7 @@
     if (name === "liga") renderLiga();
     if (name === "team") renderTeamPicker();
     if (name === "squad") renderSquad();
+    if (name === "cal" && !FEATURE_CAL) { show("menu"); return; }
     if (name === "cal") renderCal();
     renderTip(name);
     var navOn = ["menu", "liga", "squad", "rules", "cal"].indexOf(name) >= 0;
@@ -1640,18 +1661,20 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !el("howOverlay").hidden) closeGuide();
   });
+  // Kalender vorerst ausgeblendet: Code bleibt erhalten, zum Einschalten auf true setzen.
+  var FEATURE_CAL = false;
   var TIPS = {
     menu: { title: "Deine Startseite", items: [
       "Oben rechts wählst du deinen Verein. Du kannst bis zu drei Vereine wählen, z. B. wenn du in einem wirfst und in einem anderen trainierst.",
       "Unter <b>Team</b> markierst du mit dem Stern ☆ bis zu sechs eigene Mannschaften, auch aus verschiedenen Vereinen. Sie erscheinen dann hier mit nächstem Spiel, Tabellenplatz und letztem Ergebnis.",
-      "Die Leiste unten führt zu Tracker, Kalender, Liga und Team. Das „?“ oben links zeigt die Anleitung und die Regeln." ] },
+      "Die Leiste unten führt zu " + (FEATURE_CAL ? "Tracker, Kalender, Liga und Team" : "Tracker, Liga und Team") + ". Das „?“ oben links zeigt die Anleitung und die Regeln." ] },
     team: { title: "Vereine wählen", items: [
       "Tippe einen Verein an, um ihn hinzuzufügen, und noch einmal, um ihn zu entfernen. Bis zu drei Vereine gehen gleichzeitig.",
       "Der zuerst gewählte ist dein Hauptverein. Mit „Fertig“ unten kommst du zurück.",
       "Das Suchfeld findet Vereine auch über ihre Mannschaften." ] },
     squad: { title: "Mannschaften und Kader", items: [
       "Mit dem Stern ☆ machst du eine Mannschaft zu „Meine Mannschaften“, bis zu sechs, auch aus verschiedenen Vereinen.",
-      "Tippe auf eine Mannschaft, um ihren Kader anzulegen. Beim Tracker tippst du die Werfer dann nur noch an.",
+      "Tippe auf eine Mannschaft: Es öffnet sich ihre eigene Seite mit dem Kader. Mit „← Mannschaften“ geht es zurück zur Liste. Beim Tracker tippst du die Werfer dann nur noch an.",
       "Hast du mehrere Vereine gewählt, öffnest und schließt du ihre Abschnitte mit einem Tipp auf den Vereinsnamen." ] },
     liga: { title: "Liga", items: [
       "Oben stehen deine Mannschaften für den schnellen Wechsel.",
@@ -2175,6 +2198,7 @@
   });
   el("navHome").addEventListener("click", function () { show("menu"); });
   el("navCal").addEventListener("click", function () { show("cal"); });
+  el("navCal").hidden = !FEATURE_CAL;
   function renderClubChip() {
     var chip = el("clubChip");
     chip.textContent = "";
@@ -2189,13 +2213,21 @@
   }
   el("clubChip").addEventListener("click", function () { show("team"); });
   function gated(view) { return function () { show(view); }; }
-  el("navTeam").addEventListener("click", gated("squad"));
+  el("navTeam").addEventListener("click", function () { squadMode = "list"; show("squad"); });
   el("navLiga").addEventListener("click", function () { openLiga(app.ligaTab || 0); });
   el("howPick").addEventListener("click", function () { show("team"); });
   el("howSkip").addEventListener("click", closeGuide);
   el("howRules").addEventListener("click", function () { helpOpen = false; show("rules"); });
   el("tipsOn").addEventListener("change", function () { app.tips.on = el("tipsOn").checked; persist(); renderTip("menu"); });
   el("tipsReset").addEventListener("click", function () { app.tips = { on: true, seen: {} }; el("tipsOn").checked = true; persist(); renderTip("menu"); el("tipsReset").textContent = "Tipps sind wieder an"; });
+  el("squadBack").addEventListener("click", function (e) {
+    if (squadMode === "detail") {
+      e.stopImmediatePropagation();
+      squadMode = "list";
+      renderSquad();
+      el("view-squad").scrollTop = 0;
+    }
+  }, true);
   ["setupToMenu", "ligaBack", "rulesToMenu", "toMenu", "squadBack"].forEach(function (id) {
     el(id).addEventListener("click", function () { show("menu"); });
   });
@@ -3941,7 +3973,43 @@
 
   /* Kader pflegen */
   var sqNewOpen = false;
+  var squadMode = "list";
   var teamOpen = {};
+  function openTeam(key) {
+    squadTeam = key;
+    squadEdit = -1;
+    sqNewOpen = false;
+    squadMode = "detail";
+    favMsg("");
+    shareMsg("");
+    el("shareOut").hidden = true;
+    renderSquad();
+    el("view-squad").scrollTop = 0;
+  }
+  function renderTeamHead() {
+    var box = el("teamHead");
+    box.textContent = "";
+    if (squadMode !== "detail" || !squadTeam) return;
+    var meta = teamMeta(squadTeam) || { name: tparse(squadTeam).name, group: tparse(squadTeam).group || "M", klasse: tparse(squadTeam).klasse || "I", plan: "" };
+    var club = teamClub(meta.name);
+    box.appendChild(clubBadge(club));
+    var m = mk("div", "thmain");
+    m.appendChild(mk("div", "thtitle", classShort(meta.group, meta.klasse)));
+    var pl = meta.plan ? planById(meta.plan) : null;
+    var sub = [];
+    if (pl && pl.id === meta.plan) sub.push(leagueShort(pl));
+    sub.push(meta.name);
+    m.appendChild(mk("div", "thsub", sub.join(" · ")));
+    box.appendChild(m);
+    var fav = isFav(squadTeam);
+    var st = btn("star" + (fav ? " on" : ""), fav ? "★" : "☆", fav ? "Aus Meine Mannschaften entfernen" : "Zu Meine Mannschaften hinzufügen", function () {
+      var msg = toggleFav(squadTeam);
+      renderSquad();
+      if (msg) squadMsg(msg);
+    });
+    st.setAttribute("aria-pressed", fav ? "true" : "false");
+    box.appendChild(st);
+  }
   function favMsg(t) { var m = el("favMsg"); m.textContent = t || ""; m.hidden = !t; }
   var squadTeam = "";
   var squadEdit = -1;
@@ -3970,7 +4038,7 @@
     var KORDER = { I: 1, II: 2, III: 3, IV: 4, V: 5, A: 1, B: 2, C: 3, D: 4, E: 5, F: 6 };
     var renderRow = function (n, meta) {
       var pl = meta.plan ? planById(meta.plan) : null;
-      var row = mk("div", "trow" + (n === squadTeam ? " sel" : ""));
+      var row = mk("div", "trow");
       var fav = isFav(n);
       var title = classShort(meta.group, meta.klasse);
       var sub = [];
@@ -3986,7 +4054,7 @@
       row.appendChild(st);
       var main = mk("button", "tmain");
       main.type = "button";
-      main.setAttribute("aria-label", spoken + " auswählen");
+      main.setAttribute("aria-label", spoken + ", " + (app.squads[n] || []).length + " Spieler, Kader öffnen");
       var tclub = meta.club || teamClub(meta.name);
       var bd = clubBadge(tclub);
       bd.setAttribute("aria-hidden", "true");
@@ -3995,7 +4063,12 @@
       tx.appendChild(mk("span", "tname", title));
       if (sub.length) tx.appendChild(mk("span", "tsub", sub.join(" · ")));
       main.appendChild(tx);
-      main.addEventListener("click", function () { squadTeam = n; squadEdit = -1; sqNewOpen = false; favMsg(""); renderSquad(); });
+      var cnt = (app.squads[n] || []).length;
+      var tc = mk("span", "tcount");
+      tc.appendChild(document.createTextNode(cnt === 1 ? "1 Spieler" : cnt + " Spieler"));
+      tc.appendChild(mk("span", "tchev", "›"));
+      main.appendChild(tc);
+      main.addEventListener("click", function () { openTeam(n); });
       row.appendChild(main);
       listEl.appendChild(row);
     };
@@ -4047,6 +4120,12 @@
       listEl.appendChild(plus);
     }
     el("sqNewCard").hidden = !(app.club && sqNewOpen);
+    var vs = el("view-squad");
+    if (squadMode === "detail" && !squadTeam) squadMode = "list";
+    vs.classList.toggle("detail", squadMode === "detail");
+    el("squadBack").textContent = squadMode === "detail" ? "← Mannschaften" : "← Start";
+    el("squadHead").textContent = squadMode === "detail" ? "Mannschaft" : "Mannschaften";
+    renderTeamHead();
     renderShare();
     var card = el("squadCard");
     card.hidden = !squadTeam;
@@ -4055,9 +4134,8 @@
     var list = app.squads[squadTeam] || (app.squads[squadTeam] = []);
     var both = team ? !holzOnlyClass(team.group, team.klasse) : true;
     el("squadKHint").hidden = !both;
-    el("squadTitle").textContent = team ? classShort(team.group, team.klasse) : tparse(squadTeam).name;
-    var tl = team ? teamLine(team, false) : "";
-    el("squadSub").textContent = (tl ? tl + " · " : "") + list.length + " Spieler";
+    el("squadTitle").textContent = "Kader";
+    el("squadSub").textContent = list.length === 1 ? "1 Spieler" : list.length + " Spieler";
     var ol = el("squadList");
     ol.textContent = "";
     list.forEach(function (n, i) {
@@ -4102,6 +4180,7 @@
     while (str.length % 4) str += "=";
     return decodeURIComponent(escape(atob(str)));
   }
+  function importMsg(t) { var m = el("importMsg"); m.textContent = t || ""; m.hidden = !t; }
   function shareMsg(t) { var m = el("shareMsg"); m.textContent = t || ""; m.hidden = !t; }
   function renderShare() {
     var list = squadTeam ? (app.squads[squadTeam] || []) : [];
@@ -4136,10 +4215,10 @@
   el("importBtn").addEventListener("click", function () {
     var raw = el("importIn").value;
     var mt = /BOSSEL1:([A-Za-z0-9_-]+)/.exec(raw);
-    if (!mt) { shareMsg("Kein gültiger Code gefunden. Er beginnt mit „BOSSEL1:“."); return; }
+    if (!mt) { importMsg("Kein gültiger Code gefunden. Er beginnt mit „BOSSEL1:“."); return; }
     var data;
-    try { data = JSON.parse(b64d(mt[1])); } catch (e) { shareMsg("Der Code ist unvollständig oder beschädigt."); return; }
-    if (!data || typeof data.t !== "string" || !Array.isArray(data.p)) { shareMsg("Der Code enthält keinen Kader."); return; }
+    try { data = JSON.parse(b64d(mt[1])); } catch (e) { importMsg("Der Code ist unvollständig oder beschädigt."); return; }
+    if (!data || typeof data.t !== "string" || !Array.isArray(data.p)) { importMsg("Der Code enthält keinen Kader."); return; }
     var tdisp = data.t.trim().slice(0, 30);
     var validGK = GROUPS[data.g] && GROUPS[data.g].classes.indexOf(data.k) >= 0;
     var tname = validGK ? tkey(tdisp, data.g, data.k) : tdisp;
@@ -4161,12 +4240,11 @@
     if (app.club && validGK && !clubTeams().some(function (t) { return tkey(t.name, t.group, t.klasse) === tname; })) {
       app.club.extra.push({ name: tdisp, group: data.g, klasse: data.k });
     }
-    squadTeam = tname;
-    squadEdit = -1;
     el("importIn").value = "";
+    importMsg("");
     persist();
-    renderSquad();
-    shareMsg("Kader von " + tdisp + " übernommen: " + names.length + " Spieler, davon " + added + " neu.");
+    openTeam(tname);
+    squadMsg("Kader von " + tdisp + " übernommen: " + names.length + " Spieler, davon " + added + " neu.");
   });
   function squadAddPlayer() {
     var inp = el("squadInput");
