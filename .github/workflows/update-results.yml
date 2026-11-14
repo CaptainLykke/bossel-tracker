@@ -2,11 +2,14 @@ name: Ergebnisse aktualisieren
 
 on:
   schedule:
-    - cron: "0 19 * * 0"   # sonntags 19:00 UTC (20 Uhr Winterzeit, 21 Uhr Sommerzeit)
-    - cron: "0 16 * * 1"   # montags 16:00 UTC, für spät eingetragene Ergebnisse
-  workflow_dispatch:        # von Hand starten: Actions › Ergebnisse aktualisieren › Run workflow
+    # Zeiten in UTC (Winterzeit +1 Stunde, Sommerzeit +2 Stunden)
+    - cron: "*/30 10-19 * * 0,6"   # Sa + So alle 30 Minuten, ca. 11 bis 21 Uhr: Schnellmodus
+    - cron: "0 7 * * 1"            # Mo früh: letzte drei Wochen, für spät eingetragene Ergebnisse
+    - cron: "0 16 * * 1"           # Mo nachmittags: letzte drei Wochen
+    - cron: "0 3 * * 3"            # Mi nachts: alle Spielpläne komplett (Terminänderungen)
+  workflow_dispatch:                # von Hand: Actions › Ergebnisse aktualisieren › Run workflow
   push:
-    branches: [main]        # nach jeder Änderung neu veröffentlichen
+    branches: [main]                # nach jeder Änderung neu veröffentlichen
 
 permissions:
   contents: write
@@ -18,11 +21,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 1) Ergebnisse holen und im Repository speichern (läuft auch, solange das Repository privat ist)
+  # 1) Spielpläne und Ergebnisse holen und im Repository speichern
   ergebnisse:
     runs-on: ubuntu-latest
     outputs:
       privat: ${{ steps.sichtbarkeit.outputs.privat }}
+      geaendert: ${{ steps.speichern.outputs.geaendert }}
     steps:
       - name: Dateien holen
         uses: actions/checkout@v4
@@ -32,15 +36,31 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Spielpläne und Ergebnisse von bosselergebnis.info abrufen
-        run: python scripts/update_data.py
+      - name: Abrufart bestimmen
+        id: modus
+        run: |
+          case "${{ github.event.schedule }}" in
+            "*/30 10-19 * * 0,6") echo "arg=--quick" >> "$GITHUB_OUTPUT" ;;
+            "0 3 * * 3")          echo "arg=--full"  >> "$GITHUB_OUTPUT" ;;
+            *)                    echo "arg="        >> "$GITHUB_OUTPUT" ;;
+          esac
 
-      - name: Neue Ergebnisse speichern
+      - name: Spielpläne und Ergebnisse von bosselergebnis.info abrufen
+        run: python scripts/update_data.py ${{ steps.modus.outputs.arg }}
+
+      - name: Neue Daten speichern
+        id: speichern
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add daten.json
-          git diff --cached --quiet || (git commit -m "Spielpläne und Ergebnisse aktualisiert" && git push)
+          if git diff --cached --quiet; then
+            echo "geaendert=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Spielpläne und Ergebnisse aktualisiert"
+            git push
+            echo "geaendert=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Ist das Repository privat?
         id: sichtbarkeit
@@ -48,10 +68,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: echo "privat=$(gh api repos/$GITHUB_REPOSITORY --jq .private)" >> "$GITHUB_OUTPUT"
 
-  # 2) Webseite veröffentlichen (erst, wenn das Repository öffentlich ist)
+  # 2) Webseite veröffentlichen, wenn sich etwas geändert hat (und das Repository öffentlich ist)
   seite:
     needs: ergebnisse
-    if: needs.ergebnisse.outputs.privat == 'false'
+    if: needs.ergebnisse.outputs.privat == 'false' && (needs.ergebnisse.outputs.geaendert == 'true' || github.event_name != 'schedule')
     runs-on: ubuntu-latest
     environment:
       name: github-pages
