@@ -1,5 +1,10 @@
 name: Ergebnisse aktualisieren
 
+# Die Webseite veröffentlicht GitHub Pages direkt aus dem Branch main
+# (Settings › Pages › Source: "Deploy from a branch", main, / (root)).
+# Dieser Ablauf holt nur die Daten und speichert sie; jede Änderung an main
+# wird danach von GitHub automatisch veröffentlicht.
+
 on:
   schedule:
     # Zeiten in UTC (Winterzeit +1 Stunde, Sommerzeit +2 Stunden)
@@ -8,25 +13,17 @@ on:
     - cron: "0 16 * * 1"           # Mo nachmittags: letzte drei Wochen
     - cron: "0 3 * * 3"            # Mi nachts: alle Spielpläne komplett (Terminänderungen)
   workflow_dispatch:                # von Hand: Actions › Ergebnisse aktualisieren › Run workflow
-  push:
-    branches: [main]                # nach jeder Änderung neu veröffentlichen
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: daten
   cancel-in-progress: false
 
 jobs:
-  # 1) Spielpläne und Ergebnisse holen und im Repository speichern
   ergebnisse:
     runs-on: ubuntu-latest
-    outputs:
-      privat: ${{ steps.sichtbarkeit.outputs.privat }}
-      geaendert: ${{ steps.speichern.outputs.geaendert }}
     steps:
       - name: Dateien holen
         uses: actions/checkout@v6
@@ -49,47 +46,13 @@ jobs:
         run: python scripts/update_data.py ${{ steps.modus.outputs.arg }}
 
       - name: Neue Daten speichern
-        id: speichern
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add daten.json
           if git diff --cached --quiet; then
-            echo "geaendert=false" >> "$GITHUB_OUTPUT"
+            echo "Keine Änderungen."
           else
             git commit -m "Spielpläne und Ergebnisse aktualisiert"
             git push
-            echo "geaendert=true" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Ist das Repository privat?
-        id: sichtbarkeit
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: echo "privat=$(gh api repos/$GITHUB_REPOSITORY --jq .private)" >> "$GITHUB_OUTPUT"
-
-  # 2) Webseite veröffentlichen, wenn sich etwas geändert hat (und das Repository öffentlich ist)
-  seite:
-    needs: ergebnisse
-    if: needs.ergebnisse.outputs.privat == 'false' && (needs.ergebnisse.outputs.geaendert == 'true' || github.event_name != 'schedule')
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Aktuellen Stand holen
-        uses: actions/checkout@v6
-        with:
-          ref: main
-
-      - name: GitHub Pages vorbereiten
-        uses: actions/configure-pages@v6
-
-      - name: Seite hochladen
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: "."
-
-      - name: Seite veröffentlichen
-        id: deployment
-        uses: actions/deploy-pages@v5
