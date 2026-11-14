@@ -3,9 +3,10 @@
 daten.json neben die App (index.html).
 
 - Welche Ligen: alle Spielpläne, die auf der Kreisseite (KREISE) gelistet sind.
-- Schonend: Komplette Spielpläne höchstens alle FULL_EVERY_DAYS Tage, sonst nur
-  die Spieltage der letzten RESULT_WINDOW_DAYS Tage (dort ändern sich Ergebnisse).
-- Komplett neu laden:  python scripts/update_data.py --full
+- Normal:  python scripts/update_data.py          Spieltage der letzten RESULT_WINDOW_DAYS Tage
+- Schnell: python scripts/update_data.py --quick  nur Spieltage der letzten QUICK_WINDOW_DAYS Tage
+           (für die häufigen Läufe am Wochenende, nur wenige Abrufe)
+- Komplett: python scripts/update_data.py --full  alle Spielpläne und Spieltage neu
 Benötigt nur Python 3 (3.9+), keine zusätzlichen Pakete.
 """
 import datetime
@@ -21,8 +22,9 @@ from zoneinfo import ZoneInfo
 
 SEASON = "2026-2027"
 KREISE = ["ese"]             # Kreis VIII Esens. Weitere Kreise z. B. "aur", "nor", "wtm", "fri"
-FULL_EVERY_DAYS = 7          # kompletter Abruf aller Spieltage höchstens so oft
-RESULT_WINDOW_DAYS = 21      # Spieltage in diesem Zeitraum werden bei jedem Lauf neu geholt
+FULL_EVERY_DAYS = 10         # Sicherheitsnetz: so lange ohne kompletten Abruf, dann komplett (nicht im Schnellmodus)
+RESULT_WINDOW_DAYS = 21      # normaler Lauf: Spieltage der letzten drei Wochen
+QUICK_WINDOW_DAYS = 2        # Schnellmodus: nur das laufende Wochenende
 PAUSE = 0.4                  # Sekunden zwischen zwei Abrufen
 
 SITE = "https://bosselergebnis.info"
@@ -178,6 +180,8 @@ def plan_from_days(meta, be_id, days):
 
 def main():
     full = "--full" in sys.argv
+    quick = "--quick" in sys.argv and not full
+    window = QUICK_WINDOW_DAYS if quick else RESULT_WINDOW_DAYS
     now = datetime.datetime.now(TZ)
     today = now.date()
     try:
@@ -187,10 +191,12 @@ def main():
     old_plans = {p["url"]: p for p in old.get("plans", [])}
     old_records = {r["id"]: r for r in old.get("records", [])}
     last_full = old.get("vollabruf")
-    need_full = full or not old_plans or not last_full or (today - datetime.date.fromisoformat(last_full)).days >= FULL_EVERY_DAYS
+    overdue = not last_full or (today - datetime.date.fromisoformat(last_full)).days >= FULL_EVERY_DAYS
+    need_full = full or not old_plans or (overdue and not quick)
 
     leagues = discover()
-    print(f"{len(leagues)} Ligen gefunden ({'kompletter Abruf' if need_full else 'nur aktuelle Spieltage'})")
+    mode = "kompletter Abruf" if need_full else ("Schnellmodus, letzte %d Tage" % window if quick else "letzte %d Tage" % window)
+    print(f"{len(leagues)} Ligen gefunden ({mode})")
     plans, records, errors = [], dict(old_records), 0
     for lg in leagues:
         slug = lg["url"].rsplit("/", 1)[1]
@@ -223,7 +229,7 @@ def main():
                 last = plan["days"][-1]["n"] if plan["days"] else None
                 for d in plan["days"]:
                     dd = datetime.date.fromisoformat(d["d"])
-                    if dd > today or (today - dd).days > RESULT_WINDOW_DAYS:
+                    if dd > today or (today - dd).days > window:
                         continue
                     games = get_day(plan["beId"], d["n"], last)
                     for g in games:
