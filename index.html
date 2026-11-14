@@ -335,6 +335,30 @@
   .tsection { color: var(--muted); font-size: .78rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; margin: 6px 2px 0; }
   .tadd { align-self: flex-start; }
   .star:focus-visible, .favbtn:focus-visible, .tmain:focus-visible { outline: 3px solid var(--text); outline-offset: -3px; }
+  .homecards { display: flex; flex-direction: column; gap: 10px; }
+  .homecards[hidden] { display: none; }
+  .homelabel { font-size: .78rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 2px 2px -2px; }
+  .hchead { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: .95rem; }
+  .hchead .hcteam { color: var(--accent); }
+  .tlogo { width: 26px; height: 26px; border-radius: 50%; object-fit: contain; flex: none; background: #fff; }
+  .tinit { width: 26px; height: 26px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--undo); color: var(--text); font-size: .72rem; font-weight: 900; }
+  .hcstats { font-size: .9rem; color: var(--muted); }
+  .ligachips { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 0; }
+  .ligachips::-webkit-scrollbar { display: none; }
+  .ligachips[hidden] { display: none; }
+  .ligachips .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px 6px 6px; font-size: .98rem; white-space: nowrap; }
+  .ligasel2 { display: flex; flex-direction: column; gap: 8px; }
+  .ligasel2 > * { min-width: 0; }
+  .ligasel2 .ligateamrow .field select { font-size: 15px; }
+  .ligaplan select { font-size: 15px; }
+  .trow .tmain { flex-direction: row; align-items: center; gap: 10px; }
+  .trow .ttexts { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .clubhead { display: flex; align-items: center; gap: 8px; width: 100%; border: 0; background: transparent; padding: 8px 2px 2px; cursor: pointer; color: var(--text); font: inherit; font-weight: 900; font-size: 1rem; text-align: left; }
+  .clubhead .cnt { color: var(--muted); font-weight: 700; font-size: .88rem; }
+  .clubhead .caret { margin-left: auto; color: var(--muted); }
+  .teambtn .selmark { margin-left: auto; font-weight: 900; color: var(--accent); flex: none; font-size: 1.3rem; padding-left: 8px; }
+  .hvbadge { align-self: flex-start; font-size: .75rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+  .teamdonebar { margin-top: 0; }
   .chipplus { min-width: 52px; font-size: 1.6rem; line-height: 1; padding-top: 4px; padding-bottom: 6px; }
   .kpair { display: inline-flex; gap: 6px; flex: none; }
   .kball { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; opacity: .3; flex: none; }
@@ -709,7 +733,7 @@
     </div>
     <h1 class="apptitle">Boßel-Tracker</h1>
     </div>
-    <section class="card homenext" id="homeNext" hidden></section>
+    <div class="homecards" id="homeNext" hidden></div>
     <div class="homestats" id="homeStats" hidden></div>
     <div class="card homeempty" id="homeEmpty" hidden>Wähle oben rechts deinen Verein. Dann siehst du hier dein nächstes Spiel, deinen Tabellenplatz und das letzte Ergebnis.</div>
     <p class="homehint" id="homeHint"></p>
@@ -748,6 +772,7 @@
       <label class="field tn"><span>Name des Vereins</span><input id="toName" type="text" maxlength="30" autocomplete="off"></label>
       <button class="big" id="toSave" type="button">Übernehmen</button>
     </div>
+    <div class="stickybar teamdonebar"><button class="big" id="teamDone" type="button">Fertig</button></div>
     <div class="card" id="clubClearCard">
       <h3>Verein abwählen</h3>
       <div class="sub">Zeigt die Startseite so, wie sie neue Besucher sehen. Deine Kader und der laufende Tracker bleiben erhalten.</div>
@@ -965,8 +990,9 @@
 <!-- ============ Liga: Tabelle, Ergebnisse, Spielplan ============ -->
 <div class="view" id="view-liga" hidden>
   <div class="ligahead">
-    <div class="ligatop"><button class="back" id="ligaBack" type="button">← Start</button><div class="ligaplan" id="ligaClasses"></div></div>
-    <div class="ligateamrow"><label class="field slim"><span class="sr">Mannschaft</span><select id="ligaTeam"></select></label><button class="favbtn" id="ligaFav" type="button" hidden aria-pressed="false">☆</button></div>
+    <div class="ligatop"><button class="back" id="ligaBack" type="button">← Start</button><div class="ligachips" id="ligaMine" role="group" aria-label="Meine Mannschaften"></div></div>
+    <div class="ligasel2"><div class="ligaplan" id="ligaClasses"></div>
+    <div class="ligateamrow"><label class="field slim"><span class="sr">Mannschaft</span><select id="ligaTeam"></select></label><button class="favbtn" id="ligaFav" type="button" hidden aria-pressed="false">☆</button></div></div>
     <nav class="tabs ligatabs" aria-label="Ansicht">
       <button class="tab active" id="lt0" type="button">Tabelle</button>
       <button class="tab" id="lt1" type="button">Ergebnisse</button>
@@ -1243,6 +1269,7 @@
     squads: {},
     kugelOf: {},
     favs: [],
+    clubsMore: [],
     ligaTab: 0,
     seedV: ""
   };
@@ -1415,7 +1442,8 @@
       app.match = fixMatch(raw.match);
       app.seedV = typeof raw.seedV === "string" ? raw.seedV : "";
       app.seedStand = typeof raw.seedStand === "string" ? raw.seedStand : "";
-      app.favs = Array.isArray(raw.favs) ? raw.favs.filter(function (x) { return typeof x === "string" && x.trim(); }).slice(0, 3) : [];
+      app.favs = Array.isArray(raw.favs) ? raw.favs.filter(function (x) { return typeof x === "string" && x.trim(); }).slice(0, 6) : [];
+      app.clubsMore = Array.isArray(raw.clubsMore) ? raw.clubsMore.filter(function (x) { return typeof x === "string" && x.trim(); }).map(clubCanon).slice(0, 2) : [];
       app.ligaTab = raw.ligaTab === 1 || raw.ligaTab === 2 ? raw.ligaTab : 0;
       if (raw.squads && typeof raw.squads === "object") {
         Object.keys(raw.squads).forEach(function (k) {
@@ -1555,7 +1583,7 @@
   }
   var GROUP_HEAD = { M: "Männer", F: "Frauen", JM: "Männliche Jugend", JW: "Weibliche Jugend" };
   function classShort(g, k) { return (g === "JM" || g === "JW" ? "Jugend " : GROUP_HEAD[g] + " ") + k; }
-  function nameTells(name) { return !(app.club && name === app.club.name + " I"); }
+  function nameTells(name) { var mc = myClubs(); return !(mc.length === 1 && name === mc[0] + " I"); }
   function teamLine(meta, withClass) {
     var pl = meta.plan ? planById(meta.plan) : null;
     var parts = [];
@@ -1639,100 +1667,85 @@
       }).catch(function () { /* offline: vorhandene Daten verwenden */ });
     });
   }
-  function homeInfo() {
-    var cands = (app.favs || []).map(teamMeta).filter(function (t) { return t && t.plan; });
-    if (!cands.length) {
-      if (!app.club) return null;
-      cands = clubTeams();
+  function teamOutlook(meta) {
+    var pl = meta.plan ? planById(meta.plan) : null;
+    if (!pl || pl.id !== meta.plan) return null;
+    var td = today(), t = meta.name;
+    var curIdx = -1;
+    for (var i = 0; i < pl.days.length; i++) { if (pl.days[i].d >= td) { curIdx = i; break; } }
+    var next = null;
+    if (curIdx >= 0) {
+      for (var j = curIdx; j < pl.days.length && !next; j++) {
+        var g = pl.days[j].g.filter(function (x) { return x[0] === t || x[1] === t; })[0];
+        if (g && g[0] !== "Spielfrei" && g[1] !== "Spielfrei") next = { day: pl.days[j], g: g, isCur: j === curIdx };
+      }
     }
-    var td = today();
-    var best = null;
-    cands.forEach(function (t) {
-      if (!t.plan) return;
-      var pl = planById(t.plan);
-      if (!pl) return;
-      var curIdx = -1;
-      for (var i = 0; i < pl.days.length; i++) { if (pl.days[i].d >= td) { curIdx = i; break; } }
-      var next = null;
-      if (curIdx >= 0) {
-        for (var j = curIdx; j < pl.days.length && !next; j++) {
-          var g = pl.days[j].g.filter(function (x) { return x[0] === t.name || x[1] === t.name; })[0];
-          if (g && g[0] !== "Spielfrei" && g[1] !== "Spielfrei") next = { day: pl.days[j], g: g, isCur: j === curIdx };
-        }
-      }
-      var last = null;
-      for (var k = pl.days.length - 1; k >= 0 && !last; k--) {
-        var d = pl.days[k];
-        if (curIdx >= 0 && k >= curIdx && d.d >= td) continue;
-        var lg = d.g.filter(function (x) { return x[0] === t.name || x[1] === t.name; })[0];
-        if (!lg || lg[0] === "Spielfrei" || lg[1] === "Spielfrei") continue;
-        var gi = gameInfo(pl, d, lg);
-        if (!gi.open && !gi.free) last = { day: d, g: lg, gi: gi };
-      }
-      var info = { team: t, pl: pl, next: next, last: last };
-      var key = next ? next.day.d : "9999";
-      if (!best || key < best.key) best = { key: key, info: info };
-    });
-    return best ? best.info : null;
+    var last = null;
+    for (var k = pl.days.length - 1; k >= 0 && !last; k--) {
+      var d = pl.days[k];
+      if (curIdx >= 0 && k >= curIdx && d.d >= td) continue;
+      var lg = d.g.filter(function (x) { return x[0] === t || x[1] === t; })[0];
+      if (!lg || lg[0] === "Spielfrei" || lg[1] === "Spielfrei") continue;
+      var gi = gameInfo(pl, d, lg);
+      if (!gi.open && !gi.free) last = { day: d, g: lg, gi: gi };
+    }
+    var ls = leagueStats(pl), rank = -1, row = null;
+    ls.rows.forEach(function (r, ri) { if (r.name === t) { rank = ri + 1; row = r; } });
+    return { meta: meta, pl: pl, next: next, last: last, rank: rank, row: row };
   }
-  function renderHome() {
-    var nx = el("homeNext"), st = el("homeStats"), em = el("homeEmpty"), hint = el("homeHint");
-    nx.textContent = ""; st.textContent = "";
-    var info = homeInfo();
-    em.hidden = !!app.club || !!(app.favs || []).length;
-    hint.textContent = app.club ? "Ergebnisse von bosselergebnis.info · Stand " + standText() : "";
-    if (!info) { nx.hidden = true; st.hidden = true; return; }
-    var t = info.team, pl = info.pl;
-    // Nächstes Spiel
-    nx.hidden = false;
-    var hd = mk("div", "hnhead");
-    hd.appendChild(mk("span", "hnlabel", "Nächstes Spiel"));
-    if (info.next) hd.appendChild(mk("span", "hndate", info.next.day.n + ". Spieltag · " + weekdayShort(info.next.day.d) + " " + fmtDate(info.next.day.d).slice(0, 6)));
-    nx.appendChild(hd);
-    if (info.next) {
-      var g = info.next.g;
+  function homeCard(o) {
+    var t = o.meta.name, pl = o.pl, len = schoetLen(pl.group, pl.klasse);
+    var c = mk("div", "card homenext");
+    var hd = mk("div", "hchead");
+    hd.appendChild(clubBadge(o.meta.club || teamClub(t)));
+    hd.appendChild(mk("span", null, classShort(pl.group, pl.klasse) + " · " + leagueShort(pl)));
+    c.appendChild(hd);
+    if (nameTells(t)) c.appendChild(mk("div", "hnsub", t));
+    if (o.next) {
+      c.appendChild(mk("div", "hndate", weekdayShort(o.next.day.d) + " " + fmtDate(o.next.day.d).slice(0, 6) + " · " + o.next.day.n + ". Spieltag"));
       var tm = mk("div", "hnteams");
       [0, 1].forEach(function (q) {
-        tm.appendChild(mk(g[q] === t.name ? "b" : "span", null, g[q]));
+        tm.appendChild(mk(o.next.g[q] === t ? "b" : "span", null, o.next.g[q]));
         if (q === 0) tm.appendChild(document.createTextNode(" – "));
       });
-      nx.appendChild(tm);
-      nx.appendChild(mk("div", "hnsub", classShort(pl.group, pl.klasse) + " · " + leagueShort(pl)));
-      if (info.next.isCur) nx.appendChild(goBtn(pl, info.next.day, g[0], g[1]));
-      else nx.appendChild(mk("div", "hnsub", "Tracken ist ab dem Spieltag möglich."));
+      c.appendChild(tm);
     } else {
-      nx.appendChild(mk("div", "hnsub", "Diese Saison stehen für " + t.name + " keine Spiele mehr an."));
+      c.appendChild(mk("div", "hndate", "Keine Spiele mehr in dieser Saison"));
     }
-    // Übersicht
-    st.hidden = false;
-    var len = schoetLen(pl.group, pl.klasse);
-    var ls = leagueStats(pl);
-    var ri = -1;
-    ls.rows.forEach(function (r, i) { if (r.name === t.name) ri = i; });
-    var c1 = mk("div", "hstat");
-    c1.appendChild(mk("span", "hl", "Tabelle"));
-    if (ri >= 0) {
-      var r = ls.rows[ri];
-      c1.appendChild(mk("span", "hv", (ri + 1) + "."));
-      c1.appendChild(mk("span", "hs", r.plus + " : " + r.minus + " Punkte · " + fmtErg(r.won - r.lost, len)));
-    } else {
-      c1.appendChild(mk("span", "hs", "Noch kein Tabellenplatz"));
+    var st = [];
+    if (o.rank > 0) st.push("Tabelle " + o.rank + ".");
+    if (o.last) {
+      var net = o.last.gi.net * (o.last.g[0] === t ? 1 : -1);
+      st.push("Letztes Spiel: " + (o.last.gi.draw ? "Unentschieden" : net > 0 ? "Sieg" : "Niederlage") + " " + fmtErg(net, len));
     }
-    st.appendChild(c1);
-    var c2 = mk("div", "hstat");
-    c2.appendChild(mk("span", "hl", "Letztes Spiel"));
-    if (info.last) {
-      var lg2 = info.last.g, gi = info.last.gi;
-      var mine = lg2[0] === t.name ? 1 : -1;
-      var net = gi.net * mine;
-      var opp = lg2[0] === t.name ? lg2[1] : lg2[0];
-      var word = gi.draw ? "Unentschieden" : net > 0 ? "Sieg" : "Niederlage";
-      c2.appendChild(mk("span", "hv " + (gi.draw ? "draw" : net > 0 ? "win" : "loss"), word));
-      c2.appendChild(mk("span", "hs", fmtErg(net, len) + " gegen " + opp));
-    } else {
-      c2.appendChild(mk("span", "hs", "Noch kein Ergebnis"));
+    if (st.length) c.appendChild(mk("div", "hcstats", st.join(" · ")));
+    if (o.next && o.next.isCur) c.appendChild(goBtn(pl, o.next.day, o.next.g[0], o.next.g[1]));
+    return c;
+  }
+  function renderHome() {
+    var box = el("homeNext"), em = el("homeEmpty"), hint = el("homeHint");
+    el("homeStats").hidden = true;
+    box.textContent = "";
+    var favMetas = (app.favs || []).map(teamMeta).filter(function (m) { return m && m.plan; });
+    favMetas.forEach(function (m) { m.club = teamClub(m.name); });
+    var outs = favMetas.map(teamOutlook).filter(Boolean);
+    var fallback = false;
+    if (!outs.length && app.club) {
+      var all = clubTeams().map(function (t) { return teamOutlook({ name: t.name, group: t.group, klasse: t.klasse, plan: t.plan, club: t.club }); }).filter(function (o) { return o && o.next; });
+      all.sort(function (a, b) { return a.next.day.d < b.next.day.d ? -1 : a.next.day.d > b.next.day.d ? 1 : 0; });
+      if (all.length) { outs = [all[0]]; fallback = true; }
     }
-    st.appendChild(c2);
+    outs.sort(function (a, b) {
+      var da = a.next ? a.next.day.d : "9999", db = b.next ? b.next.day.d : "9999";
+      return da < db ? -1 : da > db ? 1 : 0;
+    });
+    em.hidden = !!app.club || !!favMetas.length;
+    hint.textContent = app.club || favMetas.length ? "Ergebnisse von bosselergebnis.info · Stand " + standText() : "";
+    box.hidden = !outs.length;
+    if (!outs.length) return;
+    box.appendChild(mk("div", "homelabel", fallback ? "Nächstes Spiel" : "Meine Mannschaften"));
+    outs.forEach(function (o) { box.appendChild(homeCard(o)); });
+    if (fallback) box.appendChild(mk("p", "emptynote", "Markiere unter Team deine Mannschaften mit dem Stern, dann siehst du hier ihre nächsten Spiele."));
   }
   function renderMenu() {
     renderClubChip();
@@ -1750,7 +1763,21 @@
       : "Tippe oben rechts auf das Feld mit dem Vereinsnamen und suche deinen Verein aus. Danach zeigt die App die Spiele, Ergebnisse und Mannschaften deines Vereins. Du kannst auch ohne Verein weitermachen, dann siehst du alle Spielpläne und Ergebnisse.";
   }
   var pendingPlan = null;
-  var MAX_FAVS = 3;
+  var MAX_FAVS = 6;
+  var MAX_CLUBS = 3;
+  function myClubs() { return app.club ? [app.club.name].concat(app.clubsMore || []) : []; }
+  function isMyTeam(name) { return name !== "Spielfrei" && myClubs().some(function (c) { return teamHasClub(name, c); }); }
+  function teamClub(name) {
+    var c = myClubs().filter(function (x) { return teamHasClub(name, x); })[0];
+    return c || clubsOf(name)[0] || name;
+  }
+  function clubBadge(club, cls) {
+    var lg = clubLogo(club);
+    if (lg) { var im = mk("img", cls || "tlogo"); im.src = lg; im.alt = ""; return im; }
+    var b = mk("span", "tinit", String(club || "?").replace(/[^A-Za-zÄÖÜäöü]/g, "").slice(0, 2).toUpperCase());
+    b.setAttribute("aria-hidden", "true");
+    return b;
+  }
   function isFav(name) { return (app.favs || []).indexOf(name) >= 0; }
   function favRank(name) { var i = (app.favs || []).indexOf(name); return i < 0 ? 99 : i; }
   // Eine Mannschaft wird über Name, Gruppe und Klasse erkannt ("Utgast I|M|I"),
@@ -1804,7 +1831,7 @@
     app.favs = app.favs || [];
     var i = app.favs.indexOf(name);
     if (i >= 0) { app.favs.splice(i, 1); persist(); return ""; }
-    if (app.favs.length >= MAX_FAVS) return "Du kannst höchstens " + MAX_FAVS + " Favoriten festlegen. Entferne zuerst einen.";
+    if (app.favs.length >= MAX_FAVS) return "Du kannst höchstens " + MAX_FAVS + " Mannschaften markieren. Entferne zuerst eine.";
     app.favs.push(name);
     persist();
     return "";
@@ -1820,14 +1847,19 @@
       });
       return out;
     }
-    var c = app.club.name;
-    PLANS.forEach(function (pl) {
-      planTeams(pl).forEach(function (t) {
-        if (teamHasClub(t, c)) out.push({ name: t, group: pl.group, klasse: pl.klasse, plan: pl.id });
+    var seen = {};
+    myClubs().forEach(function (c) {
+      PLANS.forEach(function (pl) {
+        planTeams(pl).forEach(function (t) {
+          var k = tkey(t, pl.group, pl.klasse);
+          if (seen[k] || !teamHasClub(t, c)) return;
+          seen[k] = 1;
+          out.push({ name: t, group: pl.group, klasse: pl.klasse, plan: pl.id, club: c });
+        });
       });
     });
     app.club.extra.forEach(function (x) {
-      out.push({ name: x.name, group: x.group, klasse: x.klasse, plan: "" });
+      out.push({ name: x.name, group: x.group, klasse: x.klasse, plan: "", club: app.club.name });
     });
     return out;
   }
@@ -1903,9 +1935,10 @@
     if (!app.club) { chip.appendChild(mk("span", "cc-name", "Verein wählen")); return; }
     var lg = clubLogo(app.club.name);
     if (lg) { var im = mk("img"); im.src = lg; im.alt = ""; chip.appendChild(im); }
-    chip.appendChild(mk("span", "cc-name", app.club.name));
+    var more = (app.clubsMore || []).length;
+    chip.appendChild(mk("span", "cc-name", app.club.name + (more ? " +" + more : "")));
     chip.appendChild(mk("span", "cc-caret", "▾"));
-    chip.setAttribute("aria-label", "Verein: " + app.club.name + ", ändern");
+    chip.setAttribute("aria-label", "Vereine: " + myClubs().join(", ") + ", ändern");
   }
   el("clubChip").addEventListener("click", function () { show("team"); });
   function gated(view) { return function () { show(view); }; }
@@ -1933,9 +1966,10 @@
       var fav = isFav(tkey(t.name, t.group, t.klasse));
       var o = mk("option", null, (fav ? "★ " : "") + teamLine(t, true));
       o.value = String(i);
-      ogFor(fav ? "Favoriten" : (GROUP_HEAD[t.group] || "Weitere")).appendChild(o);
+      var multiC = myClubs().length > 1;
+      ogFor(fav ? "Meine Mannschaften" : (multiC ? (t.club || teamClub(t.name)) : (GROUP_HEAD[t.group] || "Weitere"))).appendChild(o);
     });
-    ["Favoriten"].concat(GORDER.map(function (g) { return GROUP_HEAD[g]; }), ["Weitere"]).forEach(function (l) { if (ogs[l]) sel.appendChild(ogs[l]); });
+    ["Meine Mannschaften"].concat(myClubs().length > 1 ? myClubs() : GORDER.map(function (g) { return GROUP_HEAD[g]; }), ["Weitere"]).forEach(function (l) { if (ogs[l]) sel.appendChild(ogs[l]); });
     var on = mk("option", null, "Andere Mannschaft …");
     on.value = "new";
     sel.appendChild(on);
@@ -3658,6 +3692,7 @@
 
   /* Kader pflegen */
   var sqNewOpen = false;
+  var teamOpen = {};
   function favMsg(t) { var m = el("favMsg"); m.textContent = t || ""; m.hidden = !t; }
   var squadTeam = "";
   var squadEdit = -1;
@@ -3672,7 +3707,13 @@
     (app.favs || []).forEach(add);
     if (app.club) clubTeams().forEach(function (t) { add(tkey(t.name, t.group, t.klasse)); });
     else Object.keys(app.squads).forEach(function (k) { if ((app.squads[k] || []).length) add(k); });
-    var teams = names.map(function (n) { return teamMeta(n) || { name: tparse(n).name, group: "M", klasse: "I", plan: "", key: n }; });
+    var clubOfKey = {};
+    if (app.club) clubTeams().forEach(function (t) { clubOfKey[tkey(t.name, t.group, t.klasse)] = t.club; });
+    var teams = names.map(function (n) {
+      var m = teamMeta(n) || { name: tparse(n).name, group: "M", klasse: "I", plan: "", key: n };
+      m.club = clubOfKey[n] || teamClub(m.name);
+      return m;
+    });
     var listEl = el("squadTeams");
     listEl.textContent = "";
     if (names.indexOf(squadTeam) < 0) { squadTeam = names[0] || ""; squadEdit = -1; }
@@ -3697,25 +3738,56 @@
       var main = mk("button", "tmain");
       main.type = "button";
       main.setAttribute("aria-label", spoken + " auswählen");
-      main.appendChild(mk("span", "tname", title));
-      if (sub.length) main.appendChild(mk("span", "tsub", sub.join(" · ")));
+      var tclub = meta.club || teamClub(meta.name);
+      var bd = clubBadge(tclub);
+      bd.setAttribute("aria-hidden", "true");
+      main.appendChild(bd);
+      var tx = mk("span", "ttexts");
+      tx.appendChild(mk("span", "tname", title));
+      if (sub.length) tx.appendChild(mk("span", "tsub", sub.join(" · ")));
+      main.appendChild(tx);
       main.addEventListener("click", function () { squadTeam = n; squadEdit = -1; sqNewOpen = false; favMsg(""); renderSquad(); });
       row.appendChild(main);
       listEl.appendChild(row);
     };
     if (favCount) {
-      listEl.appendChild(mk("div", "tsection", "Favoriten (" + favCount + " von " + MAX_FAVS + ")"));
+      listEl.appendChild(mk("div", "tsection", "Meine Mannschaften (" + favCount + " von " + MAX_FAVS + ")"));
       names.forEach(function (n, idx) { if (isFav(n)) renderRow(n, teams[idx]); });
     }
-    GORDER.forEach(function (g) {
-      var items = [];
-      names.forEach(function (n, idx) { if (!isFav(n) && teams[idx].group === g) items.push({ n: n, m: teams[idx] }); });
-      if (!items.length) return;
-      items.sort(function (x, y) { return (KORDER[x.m.klasse] || 9) - (KORDER[y.m.klasse] || 9) || x.n.localeCompare(y.n, "de"); });
-      listEl.appendChild(mk("div", "tsection", GROUP_HEAD[g]));
-      items.forEach(function (it) { renderRow(it.n, it.m); });
+    var mcs = myClubs();
+    var clubList = mcs.length ? mcs : [""];
+    clubList.forEach(function (club) {
+      var inClub = [];
+      names.forEach(function (n, idx) {
+        if (isFav(n)) return;
+        var cl = teams[idx].club || teamClub(teams[idx].name);
+        if (!club || cl === club || (mcs.indexOf(cl) < 0 && club === mcs[0])) inClub.push(idx);
+      });
+      if (!inClub.length) return;
+      var open = true;
+      if (mcs.length > 1) {
+        open = teamOpen[club] !== undefined ? teamOpen[club] : club === mcs[0];
+        var hb = mk("button", "clubhead");
+        hb.type = "button";
+        hb.setAttribute("aria-expanded", open ? "true" : "false");
+        hb.appendChild(clubBadge(club));
+        hb.appendChild(mk("span", null, club));
+        hb.appendChild(mk("span", "cnt", inClub.length + " Mannschaften"));
+        hb.appendChild(mk("span", "caret", open ? "▾" : "▸"));
+        hb.addEventListener("click", function () { teamOpen[club] = !open; renderSquad(); });
+        listEl.appendChild(hb);
+      }
+      if (!open) return;
+      GORDER.forEach(function (g) {
+        var items = [];
+        inClub.forEach(function (idx) { if (teams[idx].group === g) items.push({ n: names[idx], m: teams[idx] }); });
+        if (!items.length) return;
+        items.sort(function (x, y) { return (KORDER[x.m.klasse] || 9) - (KORDER[y.m.klasse] || 9) || x.n.localeCompare(y.n, "de"); });
+        listEl.appendChild(mk("div", "tsection", GROUP_HEAD[g]));
+        items.forEach(function (it) { renderRow(it.n, it.m); });
+      });
     });
-    if (!names.length) listEl.appendChild(mk("p", "emptynote", app.club ? "Für deinen Verein wurde keine Mannschaft gefunden." : "Wähle oben rechts deinen Verein, dann erscheinen hier seine Mannschaften. Mit dem Stern merkst du dir bis zu drei Favoriten."));
+    if (!names.length) listEl.appendChild(mk("p", "emptynote", app.club ? "Für deinen Verein wurde keine Mannschaft gefunden." : "Wähle oben rechts deinen Verein, dann erscheinen hier seine Mannschaften. Mit dem Stern markierst du bis zu sechs eigene Mannschaften für die Startseite."));
     if (app.club) {
       var plus = btn("ghost slim tadd", sqNewOpen ? "Abbrechen" : "+ Weitere Mannschaft anlegen", "Weitere Mannschaft anlegen", function () {
         sqNewOpen = !sqNewOpen;
@@ -3901,8 +3973,7 @@
   function startFromPlan(plan, day, home, away) {
     if (match) { app.match = null; bind(); persist(); }
     pendingPlan = { n: day.n, date: day.d };
-    var club = app.club ? app.club.name : "";
-    var homeMine = teamHasClub(home, club);
+    var homeMine = isMyTeam(home);
     var ownName = homeMine ? home : away;
     var oppName = homeMine ? away : home;
     var opts = clubTeams();
@@ -3941,7 +4012,7 @@
   function clubPlans() {
     if (!app.club) return PLANS.slice();
     return PLANS.filter(function (pl) {
-      return planTeams(pl).some(function (t) { return teamHasClub(t, app.club.name); });
+      return planTeams(pl).some(function (t) { return isMyTeam(t); });
     });
   }
   /* ---------- Liga: Tabelle, Ergebnisse und Spielplan zum Wischen ---------- */
@@ -3970,7 +4041,8 @@
     ligaPager.scrollLeft = i * ligaPager.clientWidth;
     setLigaTab(i);
   }
-  function ligaMine(name) { return name !== "Spielfrei" && teamHasClub(name, app.club ? app.club.name : ""); }
+  function ligaMine(name) { return isMyTeam(name); }
+  function clubFilterLabel() { var mc = myClubs(); return mc.length > 1 ? "Spiele meiner Vereine" : "Spiele von " + (mc[0] || ""); }
   function ligaHi(name) {
     var t = app.plan.team;
     if (t !== "__all" && t !== "__club") return name === t;
@@ -3985,20 +4057,61 @@
   }
   function renderLiga() {
     var dflt = app.club ? "__club" : "__all";
-    var pg = ligaPlanGroups();
-    var flat = [];
-    pg.forEach(function (g) { flat = flat.concat(g.plans); });
-    if (!PLANS.some(function (x) { return x.id === app.plan.id; })) app.plan = { id: (flat[0] || PLANS[0]).id, team: dflt };
+    var mineTeams = (app.favs || []).map(teamMeta).filter(function (m) { return m && m.plan; });
+    if (!PLANS.some(function (x) { return x.id === app.plan.id; })) {
+      var f0 = mineTeams[0];
+      var cp0 = clubPlans()[0];
+      app.plan = f0 ? { id: f0.plan, team: f0.name } : { id: (cp0 || PLANS[0]).id, team: dflt };
+    }
     var pl = planById(app.plan.id);
+    // Schnellwahl: meine Mannschaften
+    var chipBox = el("ligaMine");
+    chipBox.textContent = "";
+    chipBox.hidden = !mineTeams.length;
+    mineTeams.forEach(function (m) {
+      var on = app.plan.id === m.plan && app.plan.team === m.name;
+      var cb = mk("button", "chip" + (on ? " active" : ""));
+      cb.type = "button";
+      cb.setAttribute("aria-pressed", on ? "true" : "false");
+      var club = teamClub(m.name);
+      cb.setAttribute("aria-label", classShort(m.group, m.klasse) + " " + m.name + " anzeigen");
+      cb.appendChild(clubBadge(club));
+      cb.appendChild(mk("span", null, classShort(m.group, m.klasse)));
+      cb.addEventListener("click", function () {
+        app.plan = { id: m.plan, team: m.name };
+        planShowPast = false;
+        persist(); renderLiga();
+      });
+      chipBox.appendChild(cb);
+    });
+    // Liga-Auswahl, nach Klasse gegliedert
     var box = el("ligaClasses");
     box.textContent = "";
     var ps = mk("select");
-    ps.setAttribute("aria-label", "Liga");
-    pg.forEach(function (g) {
-      if (!g.plans.length) return;
+    ps.setAttribute("aria-label", "Liga wählen");
+    var KO = { I: 1, II: 2, III: 3, IV: 4, V: 5, A: 1, B: 2, C: 3, D: 4, E: 5, F: 6 };
+    var groupsOrdered = [];
+    GORDER.forEach(function (g) {
+      var plansG = PLANS.filter(function (x) { return x.group === g; });
+      if (!plansG.length) return;
+      if (g === "M" || g === "F") {
+        GROUPS[g].classes.forEach(function (k) {
+          var pk = plansG.filter(function (x) { return x.klasse === k; });
+          if (pk.length) groupsOrdered.push({ label: GROUP_HEAD[g] + " " + k, plans: pk });
+        });
+      } else {
+        plansG = plansG.slice().sort(function (a, b) { return (KO[a.klasse] || 9) - (KO[b.klasse] || 9); });
+        groupsOrdered.push({ label: GROUP_HEAD[g], plans: plansG });
+      }
+    });
+    groupsOrdered.forEach(function (gr) {
       var og = mk("optgroup");
-      og.label = g.label;
-      g.plans.forEach(function (x) { var o = mk("option", null, x.title); o.value = x.id; og.appendChild(o); });
+      og.label = gr.label;
+      gr.plans.forEach(function (x) {
+        var o = mk("option", null, classShort(x.group, x.klasse) + " · " + leagueShort(x));
+        o.value = x.id;
+        og.appendChild(o);
+      });
       ps.appendChild(og);
     });
     ps.value = pl.id;
@@ -4013,7 +4126,7 @@
     if (app.plan.team !== "__club" && app.plan.team !== "__all" && teams.indexOf(app.plan.team) < 0) app.plan.team = dflt;
     var sel = el("ligaTeam");
     sel.textContent = "";
-    if (app.club) { var oc = mk("option", null, "Spiele von " + app.club.name); oc.value = "__club"; sel.appendChild(oc); }
+    if (app.club) { var oc = mk("option", null, clubFilterLabel()); oc.value = "__club"; sel.appendChild(oc); }
     var oa = mk("option", null, "Alle Mannschaften"); oa.value = "__all"; sel.appendChild(oa);
     teams.forEach(function (t) { var o = mk("option", null, t); o.value = t; sel.appendChild(o); });
     sel.value = app.plan.team;
@@ -4162,9 +4275,9 @@
       day.g.forEach(function (g) { addGameRow(c2, pl, day, g, false); });
     } else {
       var pred = ligaPred(team);
-      var label = team === "__club" ? "Spiele von " + (app.club ? app.club.name : "") : team;
+      var label = team === "__club" ? clubFilterLabel() : team;
       c2.appendChild(mk("h3", null, "Ergebnisse " + label));
-      c2.appendChild(mk("div", "sub", pl.title + " · gespielte Spiele, Ergebnis aus Sicht von " + (team === "__club" ? (app.club ? app.club.name : "") : team)));
+      c2.appendChild(mk("div", "sub", pl.title + " · gespielte Spiele, Ergebnis aus Sicht von " + (team === "__club" ? (myClubs().length > 1 ? "deinen Vereinen" : (app.club ? app.club.name : "")) : team)));
       var n = 0;
       pl.days.forEach(function (d) {
         d.g.filter(pred).forEach(function (g) {
@@ -4245,12 +4358,12 @@
   var resultsShowAll = false;
   function recKey(m) { return [m.group, m.klasse, m.st || 0, m.teams.L, m.teams.R].join("|"); }
   function visibleMatches(all) {
-    var my = app.club ? app.club.name : "";
+    var my = myClubs().length;
     var mineKeys = {};
     app.matches.forEach(function (m) { if (m.mine) mineKeys[recKey(m)] = true; });
     return app.matches.filter(function (m) {
       if (m.imp && mineKeys[recKey(m)]) return false;
-      var involves = !my || teamHasClub(m.teams.L, my) || teamHasClub(m.teams.R, my);
+      var involves = !my || isMyTeam(m.teams.L) || isMyTeam(m.teams.R);
       if (m.imp) return all || involves;
       return !m.mine || involves;
     });
@@ -4389,6 +4502,34 @@
   }
 
   /* ---------- Eigener Verein ---------- */
+  function toggleClub(c) {
+    var mc = myClubs();
+    if (mc.indexOf(c) >= 0) {
+      if (app.club.name === c) {
+        var next = (app.clubsMore || []).shift();
+        app.club = next ? { name: next, extra: [] } : null;
+      } else {
+        app.clubsMore = app.clubsMore.filter(function (x) { return x !== c; });
+      }
+      return "";
+    }
+    if (!app.club) { app.club = { name: c, extra: [] }; app.clubsMore = []; return ""; }
+    if (mc.length >= MAX_CLUBS) return "Du kannst höchstens " + MAX_CLUBS + " Vereine auswählen. Entferne zuerst einen.";
+    app.clubsMore.push(c);
+    return "";
+  }
+  function finishClubs() {
+    if (app.club) {
+      var first = clubPlans()[0];
+      if (!PLANS.some(function (x) { return x.id === app.plan.id; }) || !clubPlans().some(function (x) { return x.id === app.plan.id; })) {
+        app.plan = { id: first ? first.id : PLANS[0].id, team: "__club" };
+      }
+    }
+    planShowPast = false;
+    persist();
+    helpOpen = !app.club;
+    show("menu");
+  }
   function setClub(name) {
     var same = app.club && app.club.name === name;
     app.club = { name: name, extra: same ? app.club.extra : [] };
@@ -4414,11 +4555,16 @@
     el("toSave").addEventListener("click", function () {
       var name = el("toName").value.trim();
       if (!name) { el("toName").focus(); return; }
-      setClub(name);
+      var msg = toggleClub(name);
+      el("toName").value = "";
+      persist();
+      if (msg) alert(msg); else finishClubs();
     });
     el("teamBack").addEventListener("click", function () { show("menu"); });
+    el("teamDone").addEventListener("click", finishClubs);
     el("clubClear").addEventListener("click", function () {
       app.club = null;
+      app.clubsMore = [];
       persist();
       helpOpen = true;
       show("menu");
@@ -4452,14 +4598,18 @@
       if (normName(c).indexOf(q) >= 0) return true;
       return (teamsByClub[c] || []).some(function (t) { return normName(t).indexOf(q) >= 0; });
     });
-    if (app.club) clubs.sort(function (a, b) { return (a === app.club.name ? 0 : 1) - (b === app.club.name ? 0 : 1); });
+    var mine = myClubs();
+    clubs.sort(function (a, b) {
+      var ia = mine.indexOf(a), ib = mine.indexOf(b);
+      return (ia < 0 ? 9 : ia) - (ib < 0 ? 9 : ib);
+    });
     var card = mk("div", "card");
     card.appendChild(mk("h3", null, q ? "Suchergebnis" : "Vereine in den Spielplänen"));
-    card.appendChild(mk("div", "clubcount", clubs.length === 1 ? "1 Verein" : clubs.length + " Vereine"));
+    card.appendChild(mk("div", "clubcount", (clubs.length === 1 ? "1 Verein" : clubs.length + " Vereine") + " · " + mine.length + " von " + MAX_CLUBS + " gewählt. Tippe an, um einen Verein hinzuzufügen oder zu entfernen."));
     if (!clubs.length) card.appendChild(mk("p", "emptynote", "Kein Verein gefunden. Prüfe die Schreibweise oder trage deinen Verein unten unter „Anderer Verein“ ein."));
     clubs.forEach(function (c) {
       var teamsOf = (teamsByClub[c] || []).slice().sort(nameSort);
-      var sel = app.club && app.club.name === c;
+      var sel = myClubs().indexOf(c) >= 0;
       var lgo = clubLogo(c);
       var b = mk("button", "menubtn teambtn" + (sel ? " sel" : "") + (lgo ? " hasLogo" : ""));
       b.type = "button";
@@ -4468,7 +4618,18 @@
       tx.appendChild(mk("span", "mt", c));
       tx.appendChild(mk("span", "ms", teamsOf.join(" · ")));
       b.appendChild(tx);
-      b.addEventListener("click", function () { setClub(c); });
+      if (sel) {
+        b.appendChild(mk("span", "selmark", "✓"));
+        if (app.club.name === c) tx.insertBefore(mk("span", "hvbadge", "Hauptverein"), tx.children[1] || null);
+        b.setAttribute("aria-pressed", "true");
+      }
+      else b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", function () {
+        var msg = toggleClub(c);
+        persist();
+        renderTeamPicker();
+        if (msg) alert(msg);
+      });
       card.appendChild(b);
     });
     list.appendChild(card);
