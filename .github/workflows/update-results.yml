@@ -32,15 +32,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Ergebnisse von bosselergebnis.info abrufen
-        run: python scripts/update_results.py
+      - name: Spielpläne und Ergebnisse von bosselergebnis.info abrufen
+        run: python scripts/update_data.py
 
       - name: Neue Ergebnisse speichern
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ergebnisse.json
-          git diff --cached --quiet || (git commit -m "Ergebnisse aktualisiert" && git push)
+          git add daten.json
+          git diff --cached --quiet || (git commit -m "Spielpläne und Ergebnisse aktualisiert" && git push)
 
       - name: Ist das Repository privat?
         id: sichtbarkeit
