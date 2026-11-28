@@ -1,9 +1,18 @@
 <!DOCTYPE html>
+<!--
+  Boßel-Tracker
+  © 2026 Till Zaydowicz. Alle Rechte vorbehalten.
+  Die Nutzung der App über ihre Webadresse ist erlaubt. Kopieren, Verändern, Weitergeben
+  oder Weiterentwickeln des Programmcodes ist ohne schriftliche Zustimmung nicht gestattet.
+  Spielpläne und Ergebnisse: bosselergebnis.info. Vereinswappen: Eigentum der jeweiligen Vereine.
+-->
 <html lang="de" data-lc="green" data-rc="blue">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
+<meta name="author" content="Till Zaydowicz">
+<meta name="copyright" content="© 2026 Till Zaydowicz. Alle Rechte vorbehalten.">
 <meta name="theme-color" content="#F5EEDF">
 <title>Boßel-Tracker</title>
 
@@ -410,6 +419,20 @@
   .teamhead .tlogo, .teamhead .tinit { width: 44px; height: 44px; font-size: .95rem; }
   .teamhead .star { width: 48px; height: 48px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); font-size: 1.6rem; cursor: pointer; flex: none; }
   .teamhead .star.on { color: #C98A12; }
+  .legal { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: .82rem; line-height: 1.45; color: var(--muted); }
+  .legalmini { margin: 4px 2px 0; font-size: .78rem; color: var(--muted); }
+  .oppcard[hidden], .oppask[hidden], #oppMore[hidden] { display: none !important; }
+  #view-match:not(.setup) .oppcard, #view-match:not(.setup) .oppask { display: none !important; }
+  .oppcard { display: flex; flex-direction: column; gap: 10px; }
+  .oppcard .rname { display: flex; align-items: center; gap: 4px; }
+  .ogroup { display: flex; flex-direction: column; gap: 6px; }
+  .ogroup .oghead { font-weight: 900; font-size: .95rem; }
+  .oslot { display: flex; align-items: center; gap: 6px; }
+  .oslot .onum { width: 30px; height: 30px; flex: none; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: .9rem; background: var(--undo); color: var(--text); }
+  .oslot.filled .onum { background: var(--right); color: var(--right-ink); }
+  .oslot input { flex: 1; min-width: 0; font: inherit; font-size: 1rem; padding: 9px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); }
+  .oslot .ibtn { flex: none; }
+  .oppbench .chip { display: inline-flex; gap: 6px; align-items: center; }
   .chipplus { min-width: 52px; font-size: 1.6rem; line-height: 1; padding-top: 4px; padding-bottom: 6px; }
   .kpair { display: inline-flex; gap: 6px; flex: none; }
   .kball { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; opacity: .3; flex: none; }
@@ -789,6 +812,7 @@
     <div class="homestats" id="homeStats" hidden></div>
     <div class="card homeempty" id="homeEmpty" hidden>Wähle oben rechts deinen Verein. Dann siehst du hier dein nächstes Spiel, deinen Tabellenplatz und das letzte Ergebnis.</div>
     <p class="homehint" id="homeHint"></p>
+    <p class="legalmini">© 2026 Till Zaydowicz · Alle Rechte vorbehalten</p>
     <div class="overlay" id="howOverlay" role="dialog" aria-modal="true" aria-label="So geht's" hidden>
     <section class="card howto" id="howto">
       <div class="howhead"><h3>So geht's</h3><button class="howclose" id="howClose" type="button" aria-label="Schließen" hidden>✕</button></div>
@@ -810,6 +834,7 @@
         <label class="tipopt"><input type="checkbox" id="tipsOn"> Tipps auf jeder Seite anzeigen</label>
         <button class="ghost slim" id="tipsReset" type="button">Alle Tipps wieder anzeigen</button>
       </div>
+      <p class="legal">© 2026 Till Zaydowicz. Alle Rechte vorbehalten. Die Nutzung der App ist erlaubt. Kopieren, Verändern, Weitergeben oder Weiterentwickeln des Programmcodes ist ohne Zustimmung nicht gestattet. Spielpläne und Ergebnisse stammen von bosselergebnis.info, die Vereinswappen gehören den jeweiligen Vereinen.</p>
     </section>
     </div>
   </div>
@@ -986,6 +1011,21 @@
             </div>
             <div class="rmsg" id="kaderMsg" role="status" hidden></div>
           </div>
+          <div class="rteam oppcard" id="oppCard" hidden>
+            <h2 class="rname"><i class="cdot" id="oppDot"></i><span id="oppTitle"></span></h2>
+            <div class="sub" id="oppSub"></div>
+            <datalist id="oppNameList"></datalist>
+            <div id="oppGroups" class="gfield"></div>
+            <button class="ghost slim" id="oppMore" type="button" hidden>+ weiterer Werfer</button>
+            <h3 class="rsub">Ersatzwerfer (optional)</h3>
+            <div class="chips oppbench" id="oppBench"></div>
+            <div class="radd">
+              <input id="oppBenchIn" type="text" maxlength="30" autocomplete="off" list="oppNameList" placeholder="Ersatzwerfer des Gegners">
+              <button id="oppBenchAdd" type="button">+</button>
+            </div>
+            <div class="rmsg" id="oppMsg" role="status" hidden></div>
+          </div>
+          <button class="ghost slim oppask" id="oppAsk" type="button" hidden>+ Auch die Werfer des Gegners eintragen</button>
           <div class="rteam left" id="rcardL">
             <div class="rhead">
               <h2 class="rname" data-tn="L"></h2>
@@ -1357,6 +1397,7 @@
     kugelOf: {},
     favs: [],
     clubsMore: [],
+    oppSquads: {},
     tips: { on: true, seen: {} },
     ligaTab: 0,
     seedV: ""
@@ -1415,6 +1456,11 @@
       teams: { L: String(m.teams.L || "Mannschaft 1"), R: String(m.teams.R || "Mannschaft 2") },
       colors: fixColors(m.colors),
       own: m.own === "R" ? "R" : "L", trackOpp: !!m.trackOpp,
+      oppDraft: m.oppDraft && Array.isArray(m.oppDraft.groups) ? {
+        team: typeof m.oppDraft.team === "string" ? m.oppDraft.team : "",
+        groups: m.oppDraft.groups.slice(0, 4).map(function (a) { return (Array.isArray(a) ? a : []).slice(0, 8).map(function (x) { return typeof x === "string" ? x.slice(0, 30) : ""; }); }),
+        bench: (Array.isArray(m.oppDraft.bench) ? m.oppDraft.bench : []).filter(function (x) { return typeof x === "string" && x.trim(); }).slice(0, 8)
+      } : null,
       both: !!m.both, first: m.first === "G" ? "G" : "H",
       stark: ["4", "8", "16"].indexOf(m.stark) >= 0 ? m.stark : (m.both ? "4" : "8"),
       follow: Number.isInteger(m.follow) && m.follow >= 0 ? m.follow : null,
@@ -1534,6 +1580,12 @@
       if (raw.tips && typeof raw.tips === "object") {
         app.tips = { on: raw.tips.on !== false, seen: {} };
         if (raw.tips.seen && typeof raw.tips.seen === "object") Object.keys(raw.tips.seen).forEach(function (k) { if (raw.tips.seen[k]) app.tips.seen[k] = true; });
+      }
+      if (raw.oppSquads && typeof raw.oppSquads === "object") {
+        Object.keys(raw.oppSquads).slice(0, 80).forEach(function (t) {
+          var l = raw.oppSquads[t];
+          if (Array.isArray(l)) app.oppSquads[t] = l.filter(function (x) { return typeof x === "string" && x.trim(); }).slice(0, 40);
+        });
       }
       app.clubsMore = Array.isArray(raw.clubsMore) ? raw.clubsMore.filter(function (x) { return typeof x === "string" && x.trim(); }).map(clubCanon).slice(0, 2) : [];
       app.ligaTab = raw.ligaTab === 1 || raw.ligaTab === 2 ? raw.ligaTab : 0;
@@ -2552,6 +2604,8 @@
       }
     }
     mergeRosterIntoKader();
+    var oppErr = applyOppDraft();
+    if (oppErr) { setupMsg(oppErr); return; }
     SIDES.forEach(function (s) {
       if (!tracked(s)) {
         roster.groups[s] = [mkGroup("H")];
@@ -2828,6 +2882,8 @@
     if (wendeFlips()) {
       var g = roster.groups[match.own][0];
       g.k = g.k === "H" ? "G" : "H";
+      var og = match.both && tracked(oppSide()) ? roster.groups[oppSide()][0] : null;
+      if (og && roster.groups[oppSide()].length === 1) og.k = g.k;
       flipped = true;
     }
     var TT = totals();
@@ -2838,6 +2894,8 @@
     if (match.wende && match.wende.flipped) {
       var g = roster.groups[match.own][0];
       if (g) g.k = g.k === "H" ? "G" : "H";
+      var og = match.both && tracked(oppSide()) ? roster.groups[oppSide()][0] : null;
+      if (g && og && roster.groups[oppSide()].length === 1) og.k = g.k;
     }
     match.wende = null;
     persist(); renderChips(); renderRoster(); renderWende();
@@ -3017,10 +3075,12 @@
     return T;
   }
   function followIdx(s) {
-    if (!match || s !== match.own) return null;
-    var len = roster.groups[s].length;
+    if (!match) return null;
+    var len = roster.groups[match.own].length;
     if (len < 2 || onlyHolz() || match.both) return null;
-    return match.follow != null && match.follow < len ? match.follow : 0;
+    var f = match.follow != null && match.follow < len ? match.follow : 0;
+    if (s === match.own) return f;
+    return roster.groups[s] && roster.groups[s].length > f ? f : null;
   }
   function followChips(box, kinds, indices, cur, pick) {
     box.textContent = "";
@@ -3711,6 +3771,158 @@
     list.sort(nameSort);
     persist();
   }
+  /* ---------- Werfer des Gegners im Werfer-Schritt ---------- */
+  function oppSide() { return match.own === "L" ? "R" : "L"; }
+  function isPlaceholder(n) { return /^Werfer \d+$/.test(String(n || "")); }
+  function oppKinds() {
+    var own = match.own;
+    if (onlyHolz()) return ["H"];
+    if (match.both) { var g0 = roster.groups[own][0]; return [g0 && g0.k === "G" ? "G" : "H"]; }
+    var ng = Math.max(1, (app.last.setup[oppSide()] || {}).groups || roster.groups[own].length || 2);
+    var k = [];
+    for (var q = 0; q < Math.min(4, ng); q++) k.push(q % 2 === 0 ? "H" : "G");
+    return k;
+  }
+  function oppInit() {
+    var opp = oppSide();
+    var kinds = oppKinds();
+    if (match.oppDraft && match.oppDraft.team !== match.teams[opp]) match.oppDraft = null;
+    if (!match.oppDraft || !Array.isArray(match.oppDraft.groups)) {
+      var gs = roster.groups[opp] || [];
+      match.oppDraft = { team: match.teams[opp], groups: [], bench: (roster.bench[opp] || []).map(function (b) { return b.name; }) };
+      kinds.forEach(function (k, i) {
+        var src = gs[i] ? gs[i].p.map(function (p) { return isPlaceholder(p.name) ? "" : p.name; }) : [];
+        match.oppDraft.groups.push(src);
+      });
+    }
+    var dg = match.oppDraft.groups;
+    while (dg.length < kinds.length) dg.push([]);
+    dg.length = kinds.length;
+    var min = 4;
+    dg.forEach(function (arr) { while (arr.length < min) arr.push(""); });
+  }
+  function oppMsg(t) { var m = el("oppMsg"); m.textContent = t || ""; m.hidden = !t; }
+  function oppMemory() { return (app.oppSquads || {})[match.teams[oppSide()]] || []; }
+  function renderOppCard() {
+    var card = el("oppCard"), ask = el("oppAsk");
+    var inSetup = match && match.step !== "match";
+    ask.hidden = !inSetup || !!match.trackOpp;
+    card.hidden = !inSetup || !match.trackOpp;
+    if (card.hidden) return;
+    oppInit();
+    var opp = oppSide();
+    var kinds = oppKinds();
+    el("oppDot").className = "cdot " + (opp === "L" ? "l" : "r");
+    el("oppTitle").textContent = "Werfer " + (match.teams[opp] || "Gegner");
+    el("oppSub").textContent = "Trage die Werfer des Gegners in ihrer Wurfreihenfolge ein. Leere Felder heißen im Tracker „Werfer 1“, „Werfer 2“ usw. Mit ▲ ▼ änderst du die Reihenfolge.";
+    var dl = el("oppNameList");
+    dl.textContent = "";
+    oppMemory().forEach(function (n) { var o = mk("option"); o.value = n; dl.appendChild(o); });
+    var box = el("oppGroups");
+    box.textContent = "";
+    var num = 0;
+    match.oppDraft.groups.forEach(function (arr, gi) {
+      var gwrap = mk("div", "ogroup");
+      gwrap.appendChild(mk("div", "oghead", kinds.length > 1 ? grpLabel(kinds, gi) : kugelName(kinds[gi]) + (match.both ? " (wechselt bei der Wende)" : "")));
+      arr.forEach(function (name, i) {
+        num++;
+        var row = mk("div", "oslot" + (name ? " filled" : ""));
+        row.appendChild(mk("span", "onum", String(i + 1)));
+        var inp = mk("input");
+        inp.type = "text"; inp.maxLength = 30; inp.autocomplete = "off";
+        inp.setAttribute("list", "oppNameList");
+        inp.placeholder = "Werfer " + num;
+        inp.value = name;
+        inp.setAttribute("aria-label", (kinds.length > 1 ? grpLabel(kinds, gi) + ", " : "") + "Nr. " + (i + 1) + " des Gegners");
+        inp.addEventListener("input", function () {
+          arr[i] = inp.value.trim().slice(0, 30);
+          row.classList.toggle("filled", !!arr[i]);
+          persist();
+        });
+        inp.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            var all = box.querySelectorAll("input");
+            var k = Array.prototype.indexOf.call(all, inp);
+            if (all[k + 1]) all[k + 1].focus(); else el("oppBenchIn").focus();
+          }
+        });
+        row.appendChild(inp);
+        var up = btn("ibtn", "▲", "Nr. " + (i + 1) + " nach oben", function () { var t = arr[i - 1]; arr[i - 1] = arr[i]; arr[i] = t; persist(); renderOppCard(); });
+        up.disabled = i === 0;
+        var dn = btn("ibtn", "▼", "Nr. " + (i + 1) + " nach unten", function () { var t = arr[i + 1]; arr[i + 1] = arr[i]; arr[i] = t; persist(); renderOppCard(); });
+        dn.disabled = i === arr.length - 1;
+        row.appendChild(up); row.appendChild(dn);
+        gwrap.appendChild(row);
+      });
+      box.appendChild(gwrap);
+    });
+    var single = kinds.length === 1;
+    el("oppMore").hidden = !single || !onlyHolz() || match.oppDraft.groups[0].length >= 8;
+    var bb = el("oppBench");
+    bb.textContent = "";
+    match.oppDraft.bench.forEach(function (n, bi) {
+      var c = mk("span", "chip");
+      c.appendChild(mk("span", null, n));
+      c.appendChild(btn("ibtn", "×", n + " als Ersatz entfernen", function () { match.oppDraft.bench.splice(bi, 1); persist(); renderOppCard(); }));
+      bb.appendChild(c);
+    });
+  }
+  function oppAddBench() {
+    var inp = el("oppBenchIn");
+    var v = inp.value.trim().slice(0, 30);
+    if (!v) return;
+    if (match.oppDraft.bench.some(function (x) { return x.toLowerCase() === v.toLowerCase(); })) { oppMsg(v + " steht schon bei den Ersatzwerfern."); return; }
+    match.oppDraft.bench.push(v);
+    inp.value = "";
+    oppMsg("");
+    persist(); renderOppCard();
+    el("oppBenchIn").focus();
+  }
+  el("oppBenchAdd").addEventListener("click", oppAddBench);
+  el("oppBenchIn").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); oppAddBench(); } });
+  el("oppMore").addEventListener("click", function () { match.oppDraft.groups[0].push(""); persist(); renderOppCard(); });
+  el("oppAsk").addEventListener("click", function () { match.trackOpp = true; persist(); renderOppCard(); renderCounts(); });
+  // Beim Start: Eingaben in die Werferliste des Gegners übernehmen
+  function applyOppDraft() {
+    if (!match.trackOpp || !match.oppDraft) return "";
+    var opp = oppSide();
+    var kinds = oppKinds();
+    var names = {};
+    var dup = "";
+    var num = 0;
+    var groups = match.oppDraft.groups.map(function (arr, gi) {
+      var gr = mkGroup(kinds[gi] || "H");
+      arr.forEach(function (n) {
+        num++;
+        var nm = n || "Werfer " + num;
+        var key = nm.toLowerCase();
+        if (n && names[key]) dup = dup || nm;
+        names[key] = true;
+        gr.p.push({ name: nm, n: 0 });
+      });
+      return gr;
+    });
+    if (dup) return "Beim Gegner steht „" + dup + "“ doppelt. Bitte einen Namen ändern.";
+    var bench = match.oppDraft.bench.filter(function (b) { return !names[b.toLowerCase()]; });
+    roster.groups[opp] = groups;
+    roster.bench[opp] = bench.map(function (b) { return { name: b, n: 0 }; });
+    roster.cur[opp] = [];
+    normGroups(opp);
+    // Namen für das nächste Spiel gegen diese Mannschaft merken
+    var real = [];
+    match.oppDraft.groups.forEach(function (arr) { arr.forEach(function (n) { if (n) real.push(n); }); });
+    real = real.concat(bench);
+    if (real.length) {
+      app.oppSquads = app.oppSquads || {};
+      var tn = match.teams[opp];
+      var mem = (app.oppSquads[tn] || []).slice();
+      real.forEach(function (n) { if (!mem.some(function (x) { return x.toLowerCase() === n.toLowerCase(); })) mem.push(n); });
+      mem.sort(nameSort);
+      app.oppSquads[tn] = mem.slice(0, 40);
+    }
+    return "";
+  }
   function initKaderSel() {
     var list = squadOf(ownTeamName());
     var hasRoster = playerCount(match.own) > 0 || roster.bench[match.own].length > 0;
@@ -3755,6 +3967,7 @@
     m.hidden = !t;
   }
   function renderKader() {
+    renderOppCard();
     renderFollowRow();
     renderStartBtn();
     var name = ownTeamName();

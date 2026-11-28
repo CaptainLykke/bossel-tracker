@@ -36,8 +36,8 @@ In Phase 1 testest du deshalb den automatischen Abruf, die App selbst kannst du 
 ### Phase 2: veröffentlichen und teilen
 
 1. **Settings › General**, ganz unten **Change repository visibility › Change to public**.
-2. **Settings › Pages**: bei **Source** „**GitHub Actions**“ auswählen.
-3. **Actions › Ergebnisse aktualisieren › Run workflow**. Jetzt laufen beide Teile, „seite“ zeigt am Ende den Link.
+2. **Settings › Pages**: bei **Source** „**Deploy from a branch**“ wählen, Branch **main**, Ordner **/ (root)**, **Save**.
+3. Eine Datei `.nojekyll` anlegen (Add file › Create new file, Inhalt egal). GitHub veröffentlicht die Seite nach jeder Änderung selbst („pages build and deployment“ unter Actions).
 4. Die App ist unter `https://DEIN-NAME.github.io/bossel-tracker/` erreichbar. Diesen Link kannst du weitergeben.
 
 ## Im Alltag
@@ -50,7 +50,7 @@ Der Zeitplan steht in `.github/workflows/update-results.yml` (Zeiten in UTC, als
 | Montag früh und Montag nachmittags | Spieltage der letzten drei Wochen, für spät eingetragene Ergebnisse |
 | Mittwoch nachts | alle Spielpläne komplett, falls sich Termine geändert haben |
 
-- Die Seite wird nur neu veröffentlicht, wenn sich wirklich etwas geändert hat.
+- Die Seite wird nur neu veröffentlicht, wenn sich wirklich etwas geändert hat: GitHub veröffentlicht jede Änderung am Branch main automatisch.
 - GitHub startet geplante Läufe manchmal mit einigen Minuten Verspätung.
 - Sofort aktualisieren: **Actions › Ergebnisse aktualisieren › Run workflow**.
 - Die App zeigt auf der Startseite „Stand“ mit Datum und Uhrzeit des letzten Abrufs. Sie lädt neue Daten beim Öffnen,
@@ -72,3 +72,13 @@ Komplette Spielpläne holt es höchstens einmal pro Woche, sonst nur die letzten
 
 Bitte frag beim Betreiber von bosselergebnis.info kurz nach, ob der automatische Abruf in Ordnung ist.
 Das Skript holt die kompletten Spielpläne höchstens einmal pro Woche (rund 800 Abrufe), sonst nur die Spieltage der letzten drei Wochen (rund 150 Abrufe), jeweils mit einer kleinen Pause dazwischen.
+
+## Rechtliches
+
+© 2026 Till Zaydowicz. Alle Rechte vorbehalten.
+
+Die Nutzung der App über ihre Webadresse ist ausdrücklich erlaubt. Kopieren, Verändern, Weitergeben
+oder Weiterentwickeln des Programmcodes, der Skripte und des Designs ist ohne schriftliche Zustimmung
+nicht gestattet. Siehe `LICENSE`.
+
+Spielpläne und Ergebnisse stammen von bosselergebnis.info. Die Vereinswappen sind Eigentum der jeweiligen Vereine.
